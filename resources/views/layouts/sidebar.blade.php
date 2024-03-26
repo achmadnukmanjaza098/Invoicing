@@ -30,27 +30,34 @@
 
                 <li>
                     <a href="{{ route('customer') }}" class="waves-effect">
+                        <i class="bx bxs-user-detail"></i>
+                        <span key="t-customer">Customer</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('invoice') }}" class="waves-effect">
                         <i class="bx bx-receipt"></i>
                         <span key="t-invoice">Invoice</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{ route('customer') }}" class="waves-effect">
+                    <a href="{{ route('monitoring-invoice') }}" class="waves-effect">
                         <i class="bx bx-history"></i>
                         <span key="t-monitoring-invoice">Monitoring Invoice</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{ route('customer') }}" class="waves-effect">
+                    <a href="{{ route('monthly-target') }}" class="waves-effect">
                         <i class="bx bx-money"></i>
                         <span key="t-monthly-target">Master Monthly Target</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{ route('customer') }}" class="waves-effect">
+                    <a href="{{ route('report') }}" class="waves-effect">
                         <i class="bx bxs-report"></i>
                         <span key="t-report">Report</span>
                     </a>

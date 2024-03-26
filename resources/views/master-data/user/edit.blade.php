@@ -39,14 +39,14 @@
                     <div class="card-header alert alert-success alert-dismissible fade show" role="alert">
                         <div class="text-left">
                             <span class="alert-icon"><i class="ni ni-like-2"></i></span>
-                            <span class="alert-text"><strong>Success!</strong> Data insert success</span>
+                            <span class="alert-text"><strong>Success!</strong> Data update success</span>
                         </div>
                     </div>
                 @elseif(session()->has('failed'))
                     <div class="card-header alert alert-danger alert-dismissible fade show" role="alert">
                         <div class="text-left">
                             <span class="alert-icon"><i class="ni ni-cross"></i></span>
-                            <span class="alert-text"><strong>Failed!</strong> Data insert failed</span>
+                            <span class="alert-text"><strong>Failed!</strong> Data update failed</span>
                             </button>
                         </div>
                     </div>

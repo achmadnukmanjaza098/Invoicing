@@ -51,6 +51,10 @@ Route::middleware(['auth'])->group(function() {
 
     // customer
     Route::get('customer', [CustomerController::class, 'customer'])->name('customer');
+    Route::get('showFormCustomer/{id?}', [CustomerController::class, 'showFormCustomer'])->name('showFormCustomer');
+    Route::post('storeCustomer', [CustomerController::class, 'storeCustomer'])->name('storeCustomer');
+    Route::post('updateCustomer/{id}', [CustomerController::class, 'updateCustomer'])->name('updateCustomer');
+    Route::get('deleteCustomer/{id}', [CustomerController::class, 'deleteCustomer'])->name('deleteCustomer');
 
     // ivoice
     Route::get('invoice', [InvoiceController::class, 'invoice'])->name('invoice');

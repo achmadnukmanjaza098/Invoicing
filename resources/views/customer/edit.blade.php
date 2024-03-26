@@ -3,23 +3,24 @@
 @section('title') @lang('translation.Form_Repeater') @endsection
 
 @section('css')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
 
     @component('components.breadcrumb')
-        @slot('li_1') User @endslot
+        @slot('li_1') Customer @endslot
         @slot('li_2')
             <button
                 type="button"
                 class="btn btn-danger waves-effect btn-label waves-light"
-                onclick="window.location='{{ route('brand') }}'"
+                onclick="window.location='{{ route('customer') }}'"
             >
                 <i class="bx bx-arrow-back label-icon me-1"></i>
                 Back
             </button>
         @endslot
-        @slot('title') User Form @endslot
+        @slot('title') Customer Form @endslot
     @endcomponent
 
     <div class="row">
@@ -53,12 +54,12 @@
                 @endif
 
                 <div class="card-body">
-                    <form method="post" action="{{ route('updateBrand', $brand->id) }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('updateCustomer', $customer->id) }}" enctype="multipart/form-data">
                     @csrf
                         <div data-repeater-list="outer-group" class="outer">
                             <div data-repeater-item class="outer">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-6">
                                         <div class="mb-3">
                                             <label for="name">Name * :</label>
                                             <input
@@ -66,16 +67,38 @@
                                                 class="form-control"
                                                 id="name"
                                                 name="name"
-                                                value="{{ $brand->name }}"
+                                                value="{{ $customer->name }}"
                                                 placeholder="Enter Name..."
                                             >
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="email">Email * :</label>
+                                            <input
+                                                type="email"
+                                                class="form-control"
+                                                id="email"
+                                                name="email"
+                                                value="{{ $customer->email }}"
+                                                placeholder="Enter Email..."
+                                            >
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                        <button type="submit" class="btn btn-primary" style="margin-top: 27px;">Submit</button>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="no_hp">No. Hp * :</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="no_hp"
+                                                name="no_hp"
+                                                value="{{ $customer->no_hp }}"
+                                                placeholder="Enter No. Hp..."
+                                            >
+                                        </div>
                                     </div>
                                 </div>
 
+                                <button type="submit" class="btn btn-primary" style="margin-top: 27px;">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -88,6 +111,12 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+
     <script src="{{ URL::asset('/assets/js/pages/form-repeater.int.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/jquery-repeater/jquery-repeater.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
