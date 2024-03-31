@@ -58,6 +58,10 @@ Route::middleware(['auth'])->group(function() {
 
     // ivoice
     Route::get('invoice', [InvoiceController::class, 'invoice'])->name('invoice');
+    Route::get('showFormInvoice/{id?}', [InvoiceController::class, 'showFormInvoice'])->name('showFormInvoice');
+    Route::post('storeInvoice', [InvoiceController::class, 'storeInvoice'])->name('storeInvoice');
+    Route::post('updateInvoice/{id}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
+    Route::get('deleteInvoice/{id}', [InvoiceController::class, 'deleteInvoice'])->name('deleteInvoice');
 
     // monitoring-ivoice
     Route::get('monitoring-invoice', [MonitoringInvoiceController::class, 'monitoringInvoice'])->name('monitoring-invoice');
