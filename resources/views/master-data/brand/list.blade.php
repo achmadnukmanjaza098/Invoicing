@@ -35,6 +35,10 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>No Rekening</th>
+                                <th>Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -44,6 +48,15 @@
                             @foreach ($brands as $brand)
                                 <tr>
                                     <td>{{ $brand['name'] }}</td>
+                                    <td>{{ $brand['adress'] }}</td>
+                                    <td>{{ $brand['phone'] }}</td>
+                                    <td>{{ implode(', ', array_column(json_decode($brand['no_rekening']), 'rekening')) }}</td>
+                                    <td>
+                                        @if ($brand['active'] == 1)
+                                                <span class="badge badge-pill badge-soft-success font-size-12">Active</span>
+                                            @else
+                                                <span class="badge badge-pill badge-soft-danger font-size-12">Deactive</span>
+                                        @endif
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i

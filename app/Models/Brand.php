@@ -11,5 +11,10 @@ class Brand extends Model
 
     protected $fillable = [
         'name',
+        'address',
+        'phone',
+        'image',
+        'active',
+        'no_rekening',
     ];
 }
