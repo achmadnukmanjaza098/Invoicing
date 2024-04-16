@@ -122,25 +122,29 @@
                                         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
                                             aria-labelledby="panelsStayOpen-headingTwo">
                                             <div class="accordion-body">
-                                                <button type="button" id="add"
-                                                    class="btn btn-sm btn-success waves-effect btn-label waves-light float-end mb-3">
-                                                    <i class="bx bx-plus label-icon me-1"></i>
-                                                    Add Item
-                                                </button>
-                                                <table class="table table-editable table-nowrap align-middle table-edits">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width: 14%">Brand</th>
-                                                            <th style="width: 29%">Item</th>
-                                                            <th style="width: 12%">Qty</th>
-                                                            <th style="width: 17%">Price</th>
-                                                            <th style="width: 17%">Amount</th>
-                                                            <th style="width: 5%">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="detail_invoices">
-                                                    </tbody>
-                                                </table>
+                                                <div style="text-align: right;">
+                                                    <button type="button" id="add" class="btn btn-sm btn-success waves-effect btn-label waves-light mb-3">
+                                                        <i class="bx bx-plus label-icon me-1"></i>
+                                                        Add Item
+                                                    </button>
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-editable table-nowrap align-middle table-edits">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 14%">Brand</th>
+                                                                <th style="width: 29%">Item</th>
+                                                                <th style="width: 12%">Qty</th>
+                                                                <th style="width: 17%">Price</th>
+                                                                <th style="width: 17%">Amount</th>
+                                                                <th style="width: 5%">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="detail_invoices">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -278,7 +282,7 @@
             addRow();
         });
     </script>
-    
+
     <script src="{{ URL::asset('/assets/js/pages/form-repeater.int.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/jquery-repeater/jquery-repeater.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
