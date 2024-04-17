@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function() {
     Route::post('storeInvoice', [InvoiceController::class, 'storeInvoice'])->name('storeInvoice');
     Route::post('updateInvoice/{id}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
     Route::get('deleteInvoice/{id}', [InvoiceController::class, 'deleteInvoice'])->name('deleteInvoice');
+    Route::get('downloadInvoice/{id}', [InvoiceController::class, 'downloadInvoice'])->name('downloadInvoice');
 
     // monitoring-ivoice
     Route::get('monitoring-invoice', [MonitoringInvoiceController::class, 'monitoringInvoice'])->name('monitoring-invoice');

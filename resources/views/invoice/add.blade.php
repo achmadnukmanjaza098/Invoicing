@@ -9,6 +9,10 @@
         .table-input-height {
             height: 36px !important;
         }
+
+        .select2-container {
+            width: 100% !important;
+        }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 @endsection
@@ -82,7 +86,8 @@
                                                     <div class="col-6">
                                                         <div class="mb-3">
                                                             <label for="date">Order Id * :</label>
-                                                            <input class="form-control" type="text" name="order_id" placeholder="Enter Order Id...">
+                                                            <input class="form-control" type="text" name="order_id"
+                                                                placeholder="Enter Order Id...">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="customer_id">Customer * :</label>
@@ -92,6 +97,17 @@
                                                                 @foreach ($customers as $customer)
                                                                     <option value="{{ $customer->id }}">
                                                                         {{ $customer->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="brand_id">Brand * :</label>
+                                                            <select class="form-control select2" id="brand_id"
+                                                                name="brand_id">
+                                                                <option value="">Select Brand</option>
+                                                                @foreach ($brands as $brand)
+                                                                    <option value="{{ $brand->id }}">
+                                                                        {{ $brand->name }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -123,21 +139,22 @@
                                             aria-labelledby="panelsStayOpen-headingTwo">
                                             <div class="accordion-body">
                                                 <div style="text-align: right;">
-                                                    <button type="button" id="add" class="btn btn-sm btn-success waves-effect btn-label waves-light mb-3">
+                                                    <button type="button" id="add"
+                                                        class="btn btn-sm btn-success waves-effect btn-label waves-light mb-3">
                                                         <i class="bx bx-plus label-icon me-1"></i>
                                                         Add Item
                                                     </button>
                                                 </div>
 
                                                 <div class="table-responsive">
-                                                    <table class="table table-editable table-nowrap align-middle table-edits">
+                                                    <table
+                                                        class="table table-editable table-nowrap align-middle table-edits">
                                                         <thead>
                                                             <tr>
-                                                                <th style="width: 14%">Brand</th>
                                                                 <th style="width: 29%">Item</th>
-                                                                <th style="width: 12%">Qty</th>
-                                                                <th style="width: 17%">Price</th>
-                                                                <th style="width: 17%">Amount</th>
+                                                                <th style="width: 16%">Qty</th>
+                                                                <th style="width: 18%">Price</th>
+                                                                <th style="width: 19%">Amount</th>
                                                                 <th style="width: 5%">Action</th>
                                                             </tr>
                                                         </thead>
@@ -167,6 +184,11 @@
 @section('script')
     <script>
         $(document).ready(function() {
+            $(document).on('change', 'select[name="brand_id"]', function() {
+                var selectedBrandId = $(this).val();
+                populateItems(selectedBrandId)
+            });
+
             function updateTotalAmount() {
                 var totalAmount = 0;
                 $('input[name^="detail_items"][name$="[amount]"]').each(function() {
@@ -192,17 +214,11 @@
 
             var rowCount = 0;
 
-            function addRow() {
+            function addRow(selectedBrandId) {
                 var newRow = `
                     <tr id="row${rowCount}">
                         <td>
-                            <select class="form-control select2 brand-select" name="detail_items[${rowCount}][brand_id]">
-                                <option value="">Select Brand</option>
-                                ${brands.map(brand => `<option value="${brand.id}">${brand.name}</option>`).join('')}
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control select2 item-select" name="detail_items[${rowCount}][item_id]" disabled>
+                            <select class="form-control select2" name="detail_items[${rowCount}][item_id]" disabled>
                                 <option value="">Select Item</option>
                             </select>
                         </td>
@@ -222,32 +238,31 @@
                     </tr>`;
                 $('#detail_invoices').append(newRow);
                 $('.select2').select2();
+
+                if (selectedBrandId) populateItems(selectedBrandId);
+
                 rowCount++;
             }
 
-            $('#add').click(function() {
-                addRow();
-            });
+            function populateItems(selectedBrandId) {
+                var itemsByBrand = items.filter(function(item) {
+                    return item.brand_id == selectedBrandId;
+                });
 
-            $(document).on('change', '.brand-select', function() {
-                var brandId = $(this).val();
-                var itemSelect = $(this).closest('tr').find('.item-select');
-                itemSelect.empty();
-                itemSelect.closest('tr').find('.size-select').empty().prop('disabled', true).append(
-                    '<option value="">Select Size</option>');
-                if (brandId) {
-                    itemSelect.prop('disabled', false);
-                    var itemsFound = items.filter(item => item.brand_id == brandId);
-                    if (itemsFound.length > 0) {
-                        itemsFound.forEach(item => {
-                            itemSelect.append('<option value="">Select Item</option>')
-                            itemSelect.append(`<option value="${item.id}">${item.name}</option>`);
-                        });
-                    } else {
-                        itemSelect.append(`<option value="" disabled>Data not found</option>`);
-                    }
+                var options = '<option value="">Select Item</option>';
+                itemsByBrand.forEach(function(item) {
+                    options += '<option value="' + item.id + '">' + item.name + '</option>';
+                });
+
+                $('select[name^="detail_items"][name$="[item_id]"]').last().html(options).prop('disabled', false);
+            }
+
+            $('#add').click(function() {
+                var selectedBrandId = $('#brand_id').val();
+                if (selectedBrandId) {
+                    addRow(selectedBrandId);
                 } else {
-                    itemSelect.prop('disabled', true);
+                    alert('Please select a brand first.');
                 }
             });
 
@@ -279,7 +294,7 @@
             var brands = {!! json_encode($brands) !!};
             var items = {!! json_encode($items) !!};
 
-            addRow();
+            addRow(null);
         });
     </script>
 

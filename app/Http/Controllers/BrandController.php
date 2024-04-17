@@ -38,12 +38,13 @@ class BrandController extends Controller
             'detail_rekening.*.rekening' => 'required',
         ]);
 
-        $file = $request->file('logo');
-        $fileName = $file->getClientOriginalName();
-        $destinationPath = public_path('/assets/uploads/logo');
-        $file->move($destinationPath, $fileName);
 
         try {
+            $file = $request->file('logo');
+            $fileName = $file->getClientOriginalName();
+            $destinationPath = public_path('/assets/uploads/logo');
+            $file->move($destinationPath, $fileName);
+
             $brand = Brand::create([
                 'name' => $request->name,
                 'phone' => $request->phone,
@@ -73,15 +74,18 @@ class BrandController extends Controller
             'detail_rekening.*.rekening' => 'required',
         ]);
 
-        if ($request->file('logo')) {
-            $file = $request->file('logo');
-            unlink(public_path('/assets/uploads/logo/' . $fileName));
-            $fileName = $file->getClientOriginalName();
-            $destinationPath = public_path('/assets/uploads/logo');
-            $file->move($destinationPath, $fileName);
-        }
 
         try {
+            if ($request->file('logo')) {
+                $file = $request->file('logo');
+                if ($fileName && $fileName !== "") {
+                    unlink(public_path('/assets/uploads/logo/' . $fileName));
+                }
+                $fileName = $file->getClientOriginalName();
+                $destinationPath = public_path('/assets/uploads/logo');
+                $file->move($destinationPath, $fileName);
+            }
+
             $brand->update([
                 'name' => $request->name,
                 'phone' => $request->phone,

@@ -82,7 +82,7 @@
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="customer_id">Customer * :</label>
-                                                            <select class="form-control select2". disabled>
+                                                            <select class="form-control select2" disabled>
                                                                 @foreach ($customers as $customer)
                                                                     @if ($customer->id == $invoice->customer_id)
                                                                         ))
@@ -91,6 +91,21 @@
                                                                     @else
                                                                         <option value="{{ $customer->id }}">
                                                                             {{ $customer->name }}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="brand_id">Brand * :</label>
+                                                            <select class="form-control select2" disabled>
+                                                                @foreach ($brands as $brand)
+                                                                    @if ($brand->id == $invoice->brand_id)
+                                                                        ))
+                                                                        <option value="{{ $brand->id }}" selected>
+                                                                            {{ $brand->name }}</option>
+                                                                    @else
+                                                                        <option value="{{ $brand->id }}">
+                                                                            {{ $brand->name }}</option>
                                                                     @endif
                                                                 @endforeach
                                                             </select>
@@ -127,17 +142,15 @@
                                                 <table class="table table-editable table-nowrap align-middle table-edits">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width: 14%">Brand</th>
-                                                            <th style="width: 29%">Item</th>
-                                                            <th style="width: 12%">Qty</th>
-                                                            <th style="width: 17%">Price</th>
-                                                            <th style="width: 17%">Amount</th>
+                                                            <th style="width: 30%">Item</th>
+                                                            <th style="width: 18%">Qty</th>
+                                                            <th style="width: 19%">Price</th>
+                                                            <th style="width: 20%">Amount</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="detail_invoices">
                                                         @foreach ($detail_invoices as $detail_invoice)
                                                             <tr>
-                                                                <td>{{ $detail_invoice['brand'] }}</td>
                                                                 <td>{{ $detail_invoice['item'] }}</td>
                                                                 <td>{{ $detail_invoice['qty'] }}</td>
                                                                 <td>{{ $detail_invoice['price'] }}</td>
@@ -237,8 +250,6 @@
             function checkPaymentStatus() {
                 var status_payment = '{{ $invoice->status_payment }}';
                 var payment_method = $('#payment_method').val();
-
-                console.log('payment_method', payment_method)
 
                 if (status_payment === 'Paid' && payment_method === 'Transfer') {
                     $('#file-upload-section').show();

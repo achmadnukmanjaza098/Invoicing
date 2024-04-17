@@ -61,11 +61,13 @@
                                     </td>
                                     <td>
                                         @if ($invoice['payment_method'] == 'Cash')
-                                            <i class="bx bx-money"></i>
-                                        @else
-                                            <i class="bx bx-transfer-alt"></i>
+                                            <span class="badge badge-pill badge-soft-primary font-size-12">
+                                                <i class="bx bx-money"></i>
+                                        @elseif ($invoice['payment_method'] == 'Transfer')
+                                            <span class="badge badge-pill badge-soft-warning font-size-12">
+                                                <i class="bx bx-transfer-alt"></i>
                                         @endif
-                                        {{ $invoice['payment_method'] }}
+                                        {{ $invoice['payment_method'] }}</span>
                                     </td>
                                     <td>{{ $invoice['customer'] }}</td>
                                     <td>{{ $invoice['date'] }}</td>
@@ -76,16 +78,21 @@
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i
-                                                class="mdi mdi-pencil font-size-18 text-success"
+                                                class="mdi mdi-pencil font-size-18 text-warning"
                                                 style="cursor: pointer"
                                                 onclick="edit({{$invoice->id}})"
                                             ></i>
                                             <i
-                                                class="mdi mdi-delete font-size-18 text-success"
+                                                class="mdi mdi-delete font-size-18 text-danger"
                                                 style="cursor: pointer"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#exampleModal"
                                                 onclick="destroy({{$invoice->id}})"
+                                            ></i>
+                                            <i
+                                                class="mdi mdi-download font-size-18 text-success"
+                                                style="cursor: pointer"
+                                                onclick="download({{$invoice->id}})"
                                             ></i>
                                         </div>
                                     </td>
@@ -116,6 +123,11 @@
             } else {
 
             }
+        };
+        function download(id) {
+            let url = "{{ route('downloadInvoice', ':id') }}";
+            url = url.replace(':id', id);
+            document.location.href = url;
         };
     </script>
 

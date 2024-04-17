@@ -8,7 +8,8 @@ use App\Models\DetailInvoice;
 use App\Models\Invoice;
 use App\Models\Item;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class InvoiceController extends Controller
 {
@@ -30,10 +31,9 @@ class InvoiceController extends Controller
 
         if ($request->id) {
             $invoice = Invoice::findOrFail($request->id);
-            $detail_invoices = DetailInvoice::join('brands', 'brands.id', '=', 'detail_invoices.brand_id')
-                                            ->join('items', 'items.id', '=', 'detail_invoices.item_id')
+            $detail_invoices = DetailInvoice::join('items', 'items.id', '=', 'detail_invoices.item_id')
                                             ->where('invoice_id', $invoice->id)
-                                            ->select('detail_invoices.*', 'brands.name as brand', 'items.name as item')
+                                            ->select('detail_invoices.*', 'items.name as item')
                                             ->get();
 
             return view('invoice.edit')
@@ -57,8 +57,8 @@ class InvoiceController extends Controller
             'customer_id' => 'required',
             'date' => 'required',
             'due_date' => 'required',
+            'brand_id' => 'required',
             'detail_items' => 'required',
-            'detail_items.*.brand_id' => 'required',
             'detail_items.*.item_id' => 'required',
             'detail_items.*.qty' => 'required',
             'detail_items.*.price' => 'required',
@@ -72,6 +72,7 @@ class InvoiceController extends Controller
                 'status_payment' => 'Not Yet Paid',
                 'date' => $request->date,
                 'due_date' => $request->due_date,
+                'brand_id' => $request->brand_id,
                 'tax' => 0,
                 'subtotal' => str_replace(",", "", $request->total_amount),
                 'total' => str_replace(",", "", $request->total_amount),
@@ -80,7 +81,6 @@ class InvoiceController extends Controller
             foreach ($request->detail_items as $value) {
                 $detail_invoice = DetailInvoice::create([
                     'invoice_id' => $invoice->id,
-                    'brand_id' => $value['brand_id'],
                     'item_id' => $value['item_id'],
                     'qty' => str_replace(",", "", $value['qty']),
                     'price' => str_replace(",", "", $value['price']),
@@ -138,5 +138,40 @@ class InvoiceController extends Controller
         }
 
         return redirect()->back()->with('success', 200);
+    }
+
+    public function downloadInvoice(Request $request)
+    {
+        $invoice = Invoice::join('brands', 'brands.id', '=', 'invoices.brand_id')
+                                ->where('invoices.id', '=', $request->id)
+                                ->select('invoices.*', 'brands.image as logo', 'brands.name as brand_name')
+                                ->first();
+
+        $detail_invoices = DetailInvoice::where('invoice_id', '=', $request->id)->get();
+
+        $imagePath = public_path('/assets/uploads/logo/' . $invoice['logo']);
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $src = 'data:'.mime_content_type($imagePath).';base64,'.$imageData;
+
+        $data = [
+            'title' => "Invoice $invoice->order_id",
+
+            'invoice' => $invoice,
+            'detail_invoices' => $detail_invoices,
+
+            'logo' => $src,
+        ];
+
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml(view('invoice/download', $data));
+        $dompdf->setPaper('A4', 'potrait');
+        $dompdf->render();
+
+        // return $dompdf->stream("Invoice $invoice->order_id.pdf");
+        return $dompdf->stream("Invoice $invoice->order_id.pdf", array("Attachment" => 0));
     }
 }

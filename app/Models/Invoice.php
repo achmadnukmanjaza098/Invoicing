@@ -20,5 +20,6 @@ class Invoice extends Model
         'status_payment',
         'payment_method',
         'proof_of_payment',
+        'brand_id',
     ];
 }
