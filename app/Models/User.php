@@ -23,6 +23,7 @@ class User extends Authenticatable
         'avatar',
         'role',
         'access_brand',
+        'active',
     ];
 
     /**

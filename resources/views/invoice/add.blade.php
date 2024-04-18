@@ -251,7 +251,7 @@
 
                 var options = '<option value="">Select Item</option>';
                 itemsByBrand.forEach(function(item) {
-                    options += '<option value="' + item.id + '">' + item.name + '</option>';
+                    options += '<option value="' + item.id + '">' + item.name + ' - ' + item.size + '</option>';
                 });
 
                 $('select[name^="detail_items"][name$="[item_id]"]').last().html(options).prop('disabled', false);

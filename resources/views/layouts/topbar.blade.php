@@ -12,14 +12,14 @@
                     </span>
                 </a>
 
-                <a href="index" class="logo logo-light">
+                {{-- <a href="index" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ URL::asset ('/assets/images/logo-light.svg') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
                         <img src="{{ URL::asset ('/assets/images/logo-light.png') }}" alt="" height="19">
                     </span>
-                </a>
+                </a> --}}
             </div>
 
             <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
@@ -65,9 +65,9 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="contacts-profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">@lang('translation.Profile')</span></a>
+                    {{-- <a class="dropdown-item" href="contacts-profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">@lang('translation.Profile')</span></a>
                     <a class="dropdown-item d-block" href="#" data-bs-toggle="modal" data-bs-target=".change-password"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">@lang('translation.Settings')</span></a>
-                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-divider"></div> --}}
                     <a class="dropdown-item text-danger" href="javascript:void();" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">@lang('translation.Logout')</span></a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
@@ -75,11 +75,11 @@
                 </div>
             </div>
 
-            <div class="dropdown d-inline-block">
+            {{-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
                     <i class="bx bx-cog bx-spin"></i>
                 </button>
-            </div>
+            </div> --}}
 
         </div>
     </div>

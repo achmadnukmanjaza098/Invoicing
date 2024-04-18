@@ -42,6 +42,7 @@ class ItemController extends Controller
             'name' => 'required',
             'size' => 'required|alpha',
             'qty' => 'required|numeric',
+            'active_hidden' => 'required',
         ]);
 
         try {
@@ -51,6 +52,7 @@ class ItemController extends Controller
                 'name' => $request->name,
                 'size' => $request->size,
                 'qty' => $request->qty,
+                'active' => $request->active_hidden,
             ]);
         } catch (\exception $e) {
             \Log::debug($e);
@@ -70,6 +72,7 @@ class ItemController extends Controller
             'name' => 'required',
             'size' => 'required|alpha',
             'qty' => 'required|numeric',
+            'active_hidden' => 'required',
         ]);
 
         try {
@@ -79,6 +82,7 @@ class ItemController extends Controller
                 'name' => $request->name,
                 'size' => $request->size,
                 'qty' => $request->qty,
+                'active' => $request->active_hidden,
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('failed', 500);

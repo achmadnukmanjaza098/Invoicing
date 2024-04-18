@@ -92,11 +92,11 @@
                                             <input type="file" class="form-control" id="logo" name="logo">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="no_rekening">No Rekening * :</label>
+                                            <label for="no_rekening">Rekening * :</label>
                                             <div style="display: flex;">
                                                 <div class="me-3" style="flex-grow: 1;">
                                                     <input type="text" class="form-control" id="no_rekening"
-                                                        name="no_rekening" placeholder="Enter No Rekening...">
+                                                        name="no_rekening" placeholder="Enter Rekening...">
                                                 </div>
                                                 <div>
                                                     <button type="button" id="add" class="btn btn-success">
@@ -111,7 +111,7 @@
                                                 <table class="table table-editable table-nowrap align-middle table-edits">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width: 80%">No Rekening</th>
+                                                            <th style="width: 80%">Rekening</th>
                                                             <th style="width: 20%">Action</th>
                                                         </tr>
                                                     </thead>
@@ -178,11 +178,6 @@
 
             $('#add').click(function() {
                 var no_rekening = $("#no_rekening").val()
-                if (/^\d+$/.test(no_rekening) === false) {
-                    alert("Nomor rekening harus berupa angka");
-                    return;
-                }
-
                 addRow(no_rekening);
                 $("#no_rekening").val("")
             });

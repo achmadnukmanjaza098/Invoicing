@@ -198,13 +198,44 @@
                                                                 </select>
                                                             @endif
                                                         </div>
-                                                    </div>
-                                                    <div class="col-6" id="file-upload-section" style="display: none;">
-                                                        <div class="mb-3">
+                                                        <div class="mb-3" id="file-upload-section" style="display: none;">
                                                             <label for="proof_of_payment">Proof of Payment :</label>
                                                             <input type="file" class="form-control"
                                                                 id="proof_of_payment" name="proof_of_payment"
                                                                 value="{{ $invoice->proof_of_payment }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="mb-3">
+                                                            <label for="status_invoice">Status Payment * :</label>
+                                                            @if ($invoice->status_payment == 'Paid')
+                                                                <select class="form-control select2"
+                                                                    value="{{ $invoice->status_invoice }}"
+                                                                    id="status_invoice" name="status_invoice" disabled>
+                                                                    <option value="Belum DP"
+                                                                        {{ $invoice->status_invoice == 'Belum DP' ? 'selected' : '' }}>
+                                                                        Belum DP</option>
+                                                                    <option value="Sudah DP"
+                                                                        {{ $invoice->status_invoice == 'Sudah DP' ? 'selected' : '' }}>
+                                                                        Sudah DP</option>
+                                                                    <option value="Menunggu Pelunasan"
+                                                                        {{ $invoice->status_invoice == 'Menunggu Pelunasan' ? 'selected' : '' }}>
+                                                                        Menunggu Pelunasan</option>
+                                                                    <option value="Lunas"
+                                                                        {{ $invoice->status_invoice == 'Lunas' ? 'selected' : '' }}>
+                                                                        Lunas</option>
+                                                                </select>
+                                                            @else
+                                                                <select class="form-control select2" id="status_invoice"
+                                                                    name="status_invoice">
+                                                                    <option value="">Select Status Invoice</option>
+                                                                    <option value="Belum DP">Belum DP</option>
+                                                                    <option value="Sudah DP">Sudah DP</option>
+                                                                    <option value="Menunggu Pelunasan">Menunggu Pelunasan
+                                                                    </option>
+                                                                    <option value="Lunas">Lunas</option>
+                                                                </select>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -213,8 +244,9 @@
                                     </div>
                                 </div>
 
-                                @if ($invoice->status_payment == 'Not Yet Paid')
-                                    <button type="submit" class="btn btn-primary" style="margin-top: 27px;">Submit</button>
+                                @if ($invoice->status_payment == 'Not Yet')
+                                    <button type="submit" class="btn btn-primary"
+                                        style="margin-top: 27px;">Submit</button>
                                 @endif
                             </div>
                         </div>
@@ -250,8 +282,9 @@
             function checkPaymentStatus() {
                 var status_payment = '{{ $invoice->status_payment }}';
                 var payment_method = $('#payment_method').val();
+                var status_invoice = $('#status_invoice').val();
 
-                if (status_payment === 'Paid' && payment_method === 'Transfer') {
+                if (status_payment === 'Paid' && status_invoice === 'Lunas' && payment_method === 'Transfer') {
                     $('#file-upload-section').show();
                     $('#proof_of_payment').prop('disabled', true);
                     var previewButton = $(
@@ -274,15 +307,20 @@
                     }
                     $('#file-preview').html(preview);
                 } else {
-                    if (payment_method === 'Transfer') {
+                    if (status_invoice === 'Lunas' && payment_method === 'Transfer') {
                         $('#file-upload-section').show();
                     } else {
+                        $('#proof_of_payment').val('');
                         $('#file-upload-section').hide();
                     }
                 }
             }
 
             checkPaymentStatus();
+
+            $('#status_invoice').change(function() {
+                checkPaymentStatus();
+            });
 
             $('#payment_method').change(function() {
                 checkPaymentStatus();

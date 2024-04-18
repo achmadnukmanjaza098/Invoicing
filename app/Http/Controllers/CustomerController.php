@@ -36,6 +36,7 @@ class CustomerController extends Controller
                 'required',
                 'regex:/^[+0-9]+$/',
             ],
+            'active_hidden' => 'required',
         ]);
 
         try {
@@ -43,6 +44,7 @@ class CustomerController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'no_hp' => $request->no_hp,
+                'active' => $request->active_hidden,
             ]);
         } catch (\exception $e) {
             \Log::debug($e);
@@ -63,6 +65,7 @@ class CustomerController extends Controller
                 'required',
                 'regex:/^[+0-9]+$/',
             ],
+            'active_hidden' => 'required',
         ]);
 
         try {
@@ -70,6 +73,7 @@ class CustomerController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'no_hp' => $request->no_hp,
+                'active' => $request->active_hidden,
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('failed', 500);

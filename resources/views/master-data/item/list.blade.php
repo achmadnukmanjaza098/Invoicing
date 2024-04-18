@@ -59,13 +59,6 @@
                                                 style="cursor: pointer"
                                                 onclick="edit({{$item->id}})"
                                             ></i>
-                                            <i
-                                                class="mdi mdi-delete font-size-18 text-success"
-                                                style="cursor: pointer"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal"
-                                                onclick="destroy({{$item->id}})"
-                                            ></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -85,16 +78,6 @@
             let url = "{{ route('showFormItem', ':id') }}";
             url = url.replace(':id', id);
             document.location.href = url;
-        };
-
-        function destroy(id) {
-            if (confirm("Are you sure, Data will be deleted?") == true) {
-                let url = "{{ route('deleteItem', ':id') }}";
-                url = url.replace(':id', id);
-                document.location.href = url;
-            } else {
-
-            }
         };
     </script>
 

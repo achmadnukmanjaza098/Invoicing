@@ -13,5 +13,6 @@ class Customer extends Model
         'name',
         'email',
         'no_hp',
+        'active',
     ];
 }

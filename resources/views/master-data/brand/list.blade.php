@@ -37,7 +37,6 @@
                                 <th>Name</th>
                                 <th>Address</th>
                                 <th>Phone</th>
-                                <th>No Rekening</th>
                                 <th>Active</th>
                                 <th>Action</th>
                             </tr>
@@ -48,9 +47,8 @@
                             @foreach ($brands as $brand)
                                 <tr>
                                     <td>{{ $brand['name'] }}</td>
-                                    <td>{{ $brand['adress'] }}</td>
+                                    <td>{{ $brand['address'] }}</td>
                                     <td>{{ $brand['phone'] }}</td>
-                                    <td>{{ implode(', ', array_column(json_decode($brand['no_rekening']), 'rekening')) }}</td>
                                     <td>
                                         @if ($brand['active'] == 1)
                                                 <span class="badge badge-pill badge-soft-success font-size-12">Active</span>
@@ -63,13 +61,6 @@
                                                 class="mdi mdi-pencil font-size-18 text-success"
                                                 style="cursor: pointer"
                                                 onclick="edit({{$brand->id}})"
-                                            ></i>
-                                            <i
-                                                class="mdi mdi-delete font-size-18 text-success"
-                                                style="cursor: pointer"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal"
-                                                onclick="destroy({{$brand->id}})"
                                             ></i>
                                         </div>
                                     </td>
@@ -90,16 +81,6 @@
             let url = "{{ route('showFormBrand', ':id') }}";
             url = url.replace(':id', id);
             document.location.href = url;
-        };
-
-        function destroy(id) {
-            if (confirm("Are you sure, Data will be deleted?") == true) {
-                let url = "{{ route('deleteBrand', ':id') }}";
-                url = url.replace(':id', id);
-                document.location.href = url;
-            } else {
-
-            }
         };
     </script>
 

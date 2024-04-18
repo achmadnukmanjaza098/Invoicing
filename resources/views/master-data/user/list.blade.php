@@ -39,8 +39,9 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Avatar</th>
                                 <th>Role</th>
+                                <th>Access Brand</th>
+                                <th>Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -48,24 +49,38 @@
 
                         <tbody>
                             @foreach ($users as $user)
+
+                                {{ $access_brands = '' }}
+                                @foreach (json_decode($user['access_brand']) as $i => $acces)
+                                    @foreach ($brands as $brand)
+                                        @if ($acces == $brand['id'])
+                                            @if ((count(json_decode($user['access_brand'])) - 1) == $i)
+                                                {{ $access_brands .= $brand['name'] }}
+                                            @else
+                                                {{ $access_brands .= $brand['name'].', ' }}
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                @endforeach
+
                                 <tr>
                                     <td>{{ $user['name'] }}</td>
                                     <td>{{ $user['email'] }}</td>
-                                    <td>{{ $user['avatar'] }}</td>
                                     <td>{{ $user['role'] }}</td>
+                                    <td>{{ $access_brands }}</td>
+                                    <td>
+                                        @if ($user['active'] == 1)
+                                                <span class="badge badge-pill badge-soft-success font-size-12">Active</span>
+                                            @else
+                                                <span class="badge badge-pill badge-soft-danger font-size-12">Deactive</span>
+                                        @endif
+                                    <td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i
                                                 class="mdi mdi-pencil font-size-18 text-success"
                                                 style="cursor: pointer"
                                                 onclick="edit({{$user->id}})"
-                                            ></i>
-                                            <i
-                                                class="mdi mdi-delete font-size-18 text-success"
-                                                style="cursor: pointer"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal"
-                                                onclick="destroy({{$user->id}})"
                                             ></i>
                                         </div>
                                     </td>
@@ -86,16 +101,6 @@
             let url = "{{ route('showFormUser', ':id') }}";
             url = url.replace(':id', id);
             document.location.href = url;
-        };
-
-        function destroy(id) {
-            if (confirm("Are you sure, Data will be deleted?") == true) {
-                let url = "{{ route('deleteUser', ':id') }}";
-                url = url.replace(':id', id);
-                document.location.href = url;
-            } else {
-
-            }
         };
     </script>
 

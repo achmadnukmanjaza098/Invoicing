@@ -12,8 +12,10 @@ class UserController extends Controller
     public function user()
     {
         $users = User::all();
+        $brands = Brand::all();
 
         return view('master-data.user.list')
+                    ->with('brands', $brands)
                     ->with('users', $users);
     }
 
@@ -41,16 +43,18 @@ class UserController extends Controller
             'password' => 'required',
             'role' => 'required',
             'access_brand' => 'required',
+            'active_hidden' => 'required'
         ]);
 
         try {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'avatar' => $request->avatar ? $request->avatar : '/assets/images/users/default.jpeg',
+                'avatar' => '/assets/images/users/default.jpeg',
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'access_brand' => json_encode($request->access_brand),
+                'active' => $request->active_hidden,
             ]);
         } catch (\exception $e) {
             return redirect()->back()->with('failed', 500);
@@ -66,18 +70,18 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required',
-            'password' => 'required',
             'role' => 'required',
             'access_brand' => 'required',
+            'active_hidden' => 'required',
         ]);
-        
+
         try {
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'avatar' => $request->avatar,
                 'password' => $request->password ? Hash::make($request->password) : $user->password,
                 'role' => $request->role,
+                'active' => $request->active_hidden,
                 'access_brand' => json_encode($request->access_brand),
             ]);
         } catch (\Exception $e) {

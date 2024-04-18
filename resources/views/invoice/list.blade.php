@@ -35,13 +35,10 @@
                         <thead>
                             <tr>
                                 <th>Order Id</th>
-                                <th>Status Payment</th>
-                                <th>Payment Method</th>
+                                <th>Payment</th>
+                                <th>Brand</th>
                                 <th>Customer</th>
-                                <th>Date</th>
-                                <th>Due Date</th>
-                                <th>Subtotal</th>
-                                <th>Tax</th>
+                                <th>Invoice Date</th>
                                 <th>Total</th>
                                 <th>Action</th>
                             </tr>
@@ -54,26 +51,21 @@
                                     <td>{{ $invoice['order_id'] }}</td>
                                     <td>
                                         @if ($invoice['status_payment'] == 'Paid')
-                                                <span class="badge badge-pill badge-soft-success font-size-12">{{ $invoice['status_payment'] }}</span>
+                                                <span class="badge badge-pill badge-soft-success font-size-12">
+                                                    {{ $invoice['status_payment'] }} - {{ $invoice['payment_method'] }}
+                                                    @if ($invoice['payment_method'] == 'Cash')
+                                                        <i class="bx bx-money"></i>
+                                                    @else
+                                                        <i class="bx bx-transfer-alt"></i>
+                                                    @endif
+                                                </span>
                                             @else
                                                 <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }}</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        @if ($invoice['payment_method'] == 'Cash')
-                                            <span class="badge badge-pill badge-soft-primary font-size-12">
-                                                <i class="bx bx-money"></i>
-                                        @elseif ($invoice['payment_method'] == 'Transfer')
-                                            <span class="badge badge-pill badge-soft-warning font-size-12">
-                                                <i class="bx bx-transfer-alt"></i>
-                                        @endif
-                                        {{ $invoice['payment_method'] }}</span>
-                                    </td>
+                                    <td>{{ $invoice['brand'] }}</td>
                                     <td>{{ $invoice['customer'] }}</td>
                                     <td>{{ $invoice['date'] }}</td>
-                                    <td>{{ $invoice['due_date'] }}</td>
-                                    <td>{{ $invoice['subtotal'] }}</td>
-                                    <td>{{ $invoice['tax'] }}</td>
                                     <td>{{ $invoice['total'] }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
@@ -82,13 +74,15 @@
                                                 style="cursor: pointer"
                                                 onclick="edit({{$invoice->id}})"
                                             ></i>
-                                            <i
-                                                class="mdi mdi-delete font-size-18 text-danger"
-                                                style="cursor: pointer"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal"
-                                                onclick="destroy({{$invoice->id}})"
-                                            ></i>
+                                            @if (!$invoice['payment_method'])
+                                                <i
+                                                    class="mdi mdi-delete font-size-18 text-danger"
+                                                    style="cursor: pointer"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal"
+                                                    onclick="destroy({{$invoice->id}})"
+                                                ></i>
+                                            @endif
                                             <i
                                                 class="mdi mdi-download font-size-18 text-success"
                                                 style="cursor: pointer"

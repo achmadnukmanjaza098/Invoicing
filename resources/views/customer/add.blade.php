@@ -79,6 +79,13 @@
                                                 placeholder="Enter Email..."
                                             >
                                         </div>
+                                        <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                            <input type="hidden" id="active_hidden" name="active_hidden" value="true">
+                                            <input class="form-check-input" type="checkbox" id="active" name="active" checked>
+                                            <label class="form-check-label" for="active">
+                                                Active
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-3">
@@ -107,6 +114,18 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript">
+        function checkActive() {
+            $('#active_hidden').val(1);
+        }
+
+        checkActive()
+
+        $('#active').change(function() {
+            var activeValue = $(this).prop('checked');
+            $('#active_hidden').val(activeValue ? 1 : 0);
+        });
+    </script>
     <script src="{{ URL::asset('/assets/js/pages/form-repeater.int.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/jquery-repeater/jquery-repeater.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>

@@ -15,5 +15,6 @@ class Item extends Model
         'size',
         'qty',
         'brand_id',
+        'active',
     ];
 }

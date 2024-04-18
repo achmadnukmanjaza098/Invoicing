@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -36,7 +37,18 @@ class HomeController extends Controller
 
     public function root()
     {
-        return view('index');
+        if (Auth::user()->role === "admin") {
+            return view('index');
+        } else {
+            $invoices = Invoice::join('customers', 'customers.id', '=', 'invoices.customer_id')
+                                    ->join('brands', 'brands.id', '=', 'invoices.brand_id')
+                                    ->select('invoices.*', 'customers.name as customer', 'brands.name as brand')
+                                    ->get();
+
+            return view('invoice.list')
+                            ->with('invoices', $invoices);
+        }
+
     }
 
     /*Language Translation*/

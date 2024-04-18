@@ -10,13 +10,15 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
     public function invoice()
     {
         $invoices = Invoice::join('customers', 'customers.id', '=', 'invoices.customer_id')
-                                    ->select('invoices.*', 'customers.name as customer')
+                                    ->join('brands', 'brands.id', '=', 'invoices.brand_id')
+                                    ->select('invoices.*', 'customers.name as customer', 'brands.name as brand')
                                     ->get();
 
         return view('invoice.list')
@@ -25,9 +27,12 @@ class InvoiceController extends Controller
 
     public function showFormInvoice(Request $request)
     {
-        $brands = Brand::all();
-        $items = Item::all();
-        $customers = Customer::all();
+        $accessBrand = json_decode(Auth::user()->access_brand);
+        $brands = Brand::whereIn('id', $accessBrand)
+                        ->where('active', '=', 1)
+                        ->get();
+        $items = Item::where('active', '=', 1)->get();
+        $customers = Customer::where('active', '=', 1)->get();
 
         if ($request->id) {
             $invoice = Invoice::findOrFail($request->id);
@@ -69,7 +74,8 @@ class InvoiceController extends Controller
             $invoice = Invoice::create([
                 'order_id' => $request->order_id,
                 'customer_id' => $request->customer_id,
-                'status_payment' => 'Not Yet Paid',
+                'status_invoice' => 'Belum DP',
+                'status_payment' => 'Not Yet',
                 'date' => $request->date,
                 'due_date' => $request->due_date,
                 'brand_id' => $request->brand_id,
@@ -116,7 +122,8 @@ class InvoiceController extends Controller
             }
 
             $invoice->update([
-                'status_payment' => 'Paid',
+                'status_invoice' => $request->status_invoice,
+                'status_payment' => $request->status_invoice === 'Lunas' ? 'Paid' : 'Not Yet',
                 'payment_method' => $request->payment_method,
                 'proof_of_payment' => $fileName,
             ]);
@@ -143,11 +150,16 @@ class InvoiceController extends Controller
     public function downloadInvoice(Request $request)
     {
         $invoice = Invoice::join('brands', 'brands.id', '=', 'invoices.brand_id')
+                                ->join('customers', 'customers.id', '=', 'invoices.customer_id')
                                 ->where('invoices.id', '=', $request->id)
-                                ->select('invoices.*', 'brands.image as logo', 'brands.name as brand_name')
+                                ->select('invoices.*', 'brands.image as logo', 'brands.name as brand_name', 'brands.address as brand_address',
+                                        'brands.no_rekening as brand_rekenings', 'customers.name as customer_name')
                                 ->first();
 
-        $detail_invoices = DetailInvoice::where('invoice_id', '=', $request->id)->get();
+        $detail_invoices = DetailInvoice::join('items', 'items.id', '=', 'detail_invoices.item_id')
+                                ->where('invoice_id', '=', $request->id)
+                                ->select('detail_invoices.*', 'items.name as item_name', 'items.size as item_size')
+                                ->get();
 
         $imagePath = public_path('/assets/uploads/logo/' . $invoice['logo']);
         $imageData = base64_encode(file_get_contents($imagePath));

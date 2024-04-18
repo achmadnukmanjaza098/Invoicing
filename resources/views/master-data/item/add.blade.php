@@ -89,6 +89,13 @@
                                                 placeholder="Enter Name..."
                                             >
                                         </div>
+                                        <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                            <input type="hidden" id="active_hidden" name="active_hidden" value="true">
+                                            <input class="form-check-input" type="checkbox" id="active" name="active" checked>
+                                            <label class="form-check-label" for="active">
+                                                Active
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-3">
@@ -129,7 +136,18 @@
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
+            function checkActive() {
+                $('#active_hidden').val(1);
+            }
+
+            checkActive()
+
             $('.select2').select2();
+
+            $('#active').change(function() {
+                var activeValue = $(this).prop('checked');
+                $('#active_hidden').val(activeValue ? 1 : 0);
+            });
         });
     </script>
 
