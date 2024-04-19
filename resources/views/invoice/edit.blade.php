@@ -178,12 +178,15 @@
                                                     <div class="col-6">
                                                         <div class="mb-3">
                                                             <label for="payment_method">Payment Method * :</label>
-                                                            @if ($invoice->status_payment == 'Paid')
+                                                            @if ($invoice->payment_method)
                                                                 <select class="form-control select2"
                                                                     value="{{ $invoice->payment_method }}"
-                                                                    id="payment_method" name="payment_method" disabled>
+                                                                    id="payment_method" name="payment_method"
+                                                                    @if ($invoice->status_payment == 'Paid')
+                                                                        Disabled
+                                                                    @endif>
                                                                     <option value="Cash"
-                                                                        {{ $invoice->payment_method == 'cash' ? 'selected' : '' }}>
+                                                                        {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>
                                                                         Cash</option>
                                                                     <option value="Transfer"
                                                                         {{ $invoice->payment_method == 'Transfer' ? 'selected' : '' }}>
@@ -208,10 +211,13 @@
                                                     <div class="col-6">
                                                         <div class="mb-3">
                                                             <label for="status_invoice">Status Payment * :</label>
-                                                            @if ($invoice->status_payment == 'Paid')
+                                                            @if ($invoice->status_invoice)
                                                                 <select class="form-control select2"
                                                                     value="{{ $invoice->status_invoice }}"
-                                                                    id="status_invoice" name="status_invoice" disabled>
+                                                                    id="status_invoice" name="status_invoice"
+                                                                    @if ($invoice->status_payment == 'Paid')
+                                                                        Disabled
+                                                                    @endif>
                                                                     <option value="Belum DP"
                                                                         {{ $invoice->status_invoice == 'Belum DP' ? 'selected' : '' }}>
                                                                         Belum DP</option>

@@ -108,13 +108,13 @@ class InvoiceController extends Controller
 
         $request->validate([
             'payment_method' => 'required',
-            'proof_of_payment' => $request->input('payment_method') == 'Transfer' ? 'required' : ''
+            'proof_of_payment' => ($request->input('status_invoice') === 'Lunas' && $request->input('payment_method') == 'Transfer') ? 'required' : ''
         ]);
 
         try {
             $fileName = null;
 
-            if ($request->payment_method == 'Transfer') {
+            if ($request->payment_method == 'Transfer' && $request->file('proof_of_payment')) {
                 $file = $request->file('proof_of_payment');
                 $fileName = $file->getClientOriginalName();
                 $destinationPath = public_path('/assets/uploads/proof_of_payment');

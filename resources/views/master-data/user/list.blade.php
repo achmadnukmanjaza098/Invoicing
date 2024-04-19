@@ -49,32 +49,31 @@
 
                         <tbody>
                             @foreach ($users as $user)
-
-                                {{ $access_brands = '' }}
-                                @foreach (json_decode($user['access_brand']) as $i => $acces)
-                                    @foreach ($brands as $brand)
-                                        @if ($acces == $brand['id'])
-                                            @if ((count(json_decode($user['access_brand'])) - 1) == $i)
-                                                {{ $access_brands .= $brand['name'] }}
-                                            @else
-                                                {{ $access_brands .= $brand['name'].', ' }}
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                @endforeach
-
                                 <tr>
                                     <td>{{ $user['name'] }}</td>
                                     <td>{{ $user['email'] }}</td>
                                     <td>{{ $user['role'] }}</td>
-                                    <td>{{ $access_brands }}</td>
+                                    <td>
+                                        {{ $access_brands = '' }}
+                                        @foreach (json_decode($user['access_brand']) as $i => $acces)
+                                            @foreach ($brands as $brand)
+                                                @if ($acces == $brand['id'])
+                                                    @if ((count(json_decode($user['access_brand'])) - 1) == $i)
+                                                        {{ $access_brands .= $brand['name'] }}
+                                                    @else
+                                                        {{ $access_brands .= $brand['name'].', ' }}
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+                                    </td>
                                     <td>
                                         @if ($user['active'] == 1)
                                                 <span class="badge badge-pill badge-soft-success font-size-12">Active</span>
                                             @else
                                                 <span class="badge badge-pill badge-soft-danger font-size-12">Deactive</span>
                                         @endif
-                                    <td>
+                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i
