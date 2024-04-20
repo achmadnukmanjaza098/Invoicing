@@ -60,7 +60,17 @@
                                                     @endif
                                                 </span>
                                             @else
-                                                <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }}</span>
+                                                @if ($invoice['payment_method'])
+                                                    <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }} - {{ $invoice['payment_method'] }}
+                                                        @if ($invoice['payment_method'] == 'Cash')
+                                                            <i class="bx bx-money"></i>
+                                                        @else
+                                                            <i class="bx bx-transfer-alt"></i>
+                                                        @endif
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }}</span>
+                                                @endif
                                         @endif
                                     </td>
                                     <td>{{ $invoice['brand'] }}</td>

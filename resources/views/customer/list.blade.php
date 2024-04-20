@@ -37,6 +37,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>No. Hp</th>
+                                <th>Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -48,6 +49,13 @@
                                     <td>{{ $customer['name'] }}</td>
                                     <td>{{ $customer['email'] }}</td>
                                     <td>{{ $customer['no_hp'] }}</td>
+                                    <td>
+                                        @if ($customer['active'] == 1)
+                                                <span class="badge badge-pill badge-soft-success font-size-12">Active</span>
+                                            @else
+                                                <span class="badge badge-pill badge-soft-danger font-size-12">Deactive</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i
