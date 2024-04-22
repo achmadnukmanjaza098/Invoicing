@@ -37,17 +37,32 @@ class HomeController extends Controller
 
     public function root()
     {
-        if (Auth::user()->role === "admin") {
-            return view('index');
-        } else {
-            $invoices = Invoice::join('customers', 'customers.id', '=', 'invoices.customer_id')
-                                    ->join('brands', 'brands.id', '=', 'invoices.brand_id')
-                                    ->select('invoices.*', 'customers.name as customer', 'brands.name as brand')
-                                    ->get();
+        $invoice = Invoice::count();
+        $invoicePrice = Invoice::sum('total');
 
-            return view('invoice.list')
-                            ->with('invoices', $invoices);
-        }
+        $invoiceBelumDp = Invoice::where('status_invoice', '=', 'Belum DP')->count();
+        $invoiceBelumDpPrice = Invoice::where('status_invoice', '=', 'Belum DP')->sum('total');
+
+        $invoiceSudahDp = Invoice::where('status_invoice', '=', 'Sudah DP')->count();
+        $invoiceSudahDpPrice = Invoice::where('status_invoice', '=', 'Sudah DP')->sum('total');
+
+        $invoiceMenungguPelunasan = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->count();
+        $invoiceMenungguPelunasanPrice = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->sum('total');
+
+        $invoiceLunas = Invoice::where('status_invoice', '=', 'Lunas')->count();
+        $invoiceLunasPrice = Invoice::where('status_invoice', '=', 'Lunas')->sum('total');
+
+        return view('index')
+                ->with('invoice', $invoice)
+                ->with('invoicePrice', $invoicePrice)
+                ->with('invoiceBelumDp', $invoiceBelumDp)
+                ->with('invoiceBelumDpPrice', $invoiceBelumDpPrice)
+                ->with('invoiceSudahDp', $invoiceSudahDp)
+                ->with('invoiceSudahDpPrice', $invoiceSudahDpPrice)
+                ->with('invoiceMenungguPelunasan', $invoiceMenungguPelunasan)
+                ->with('invoiceMenungguPelunasanPrice', $invoiceMenungguPelunasanPrice)
+                ->with('invoiceLunas', $invoiceLunas)
+                ->with('invoiceLunasPrice', $invoiceLunasPrice);
 
     }
 

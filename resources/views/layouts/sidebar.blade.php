@@ -9,14 +9,14 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title" key="t-menu">@lang('translation.Menu')</li>
 
-                @if (Auth::user()->role === "admin")
-                    <li>
-                        <a href="index" class="waves-effect">
-                            <i class="bx bx-home-circle"></i>
-                            <span key="t-dashboards">Dashboard</span>
-                        </a>
-                    </li>
+                <li>
+                    <a href="index" class="waves-effect">
+                        <i class="bx bx-home-circle"></i>
+                        <span key="t-dashboards">Dashboard</span>
+                    </a>
+                </li>
 
+                @if (Auth::user()->role === "admin")
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="bx bx-store"></i>
