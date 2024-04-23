@@ -16,8 +16,10 @@ class InvoiceController extends Controller
 {
     public function invoice()
     {
+        $accessBrand = json_decode(Auth::user()->access_brand);
         $invoices = Invoice::join('customers', 'customers.id', '=', 'invoices.customer_id')
                                     ->join('brands', 'brands.id', '=', 'invoices.brand_id')
+                                    ->whereIn('brands.id', $accessBrand)
                                     ->select('invoices.*', 'customers.name as customer', 'brands.name as brand')
                                     ->get();
 

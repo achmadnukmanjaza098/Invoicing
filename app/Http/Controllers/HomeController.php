@@ -29,8 +29,34 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+
         if (view()->exists($request->path())) {
-            return view($request->path());
+            $invoice = Invoice::count();
+            $invoicePrice = Invoice::sum('total');
+
+            $invoiceBelumDp = Invoice::where('status_invoice', '=', 'Belum DP')->count();
+            $invoiceBelumDpPrice = Invoice::where('status_invoice', '=', 'Belum DP')->sum('total');
+
+            $invoiceSudahDp = Invoice::where('status_invoice', '=', 'Sudah DP')->count();
+            $invoiceSudahDpPrice = Invoice::where('status_invoice', '=', 'Sudah DP')->sum('total');
+
+            $invoiceMenungguPelunasan = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->count();
+            $invoiceMenungguPelunasanPrice = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->sum('total');
+
+            $invoiceLunas = Invoice::where('status_invoice', '=', 'Lunas')->count();
+            $invoiceLunasPrice = Invoice::where('status_invoice', '=', 'Lunas')->sum('total');
+
+            return view($request->path())
+                    ->with('invoice', $invoice)
+                    ->with('invoicePrice', $invoicePrice)
+                    ->with('invoiceBelumDp', $invoiceBelumDp)
+                    ->with('invoiceBelumDpPrice', $invoiceBelumDpPrice)
+                    ->with('invoiceSudahDp', $invoiceSudahDp)
+                    ->with('invoiceSudahDpPrice', $invoiceSudahDpPrice)
+                    ->with('invoiceMenungguPelunasan', $invoiceMenungguPelunasan)
+                    ->with('invoiceMenungguPelunasanPrice', $invoiceMenungguPelunasanPrice)
+                    ->with('invoiceLunas', $invoiceLunas)
+                    ->with('invoiceLunasPrice', $invoiceLunasPrice);
         }
         return abort(404);
     }
