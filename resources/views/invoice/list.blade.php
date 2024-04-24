@@ -12,8 +12,8 @@
 @section('content')
 
     @component('components.breadcrumb')
-        @slot('li_1') Master Data @endslot
-        @slot('title') Invoice @endslot
+        @slot('li_1') Invoice @endslot
+        @slot('title') List Invoice @endslot
     @endcomponent
 
     <div class="row">
@@ -52,7 +52,7 @@
                                     <td>
                                         @if ($invoice['status_payment'] == 'Paid')
                                                 <span class="badge badge-pill badge-soft-success font-size-12">
-                                                    {{ $invoice['status_payment'] }} - {{ $invoice['payment_method'] }}
+                                                    {{ $invoice['payment_method'] }} - {{ $invoice['status_payment'] }}
                                                     @if ($invoice['payment_method'] == 'Cash')
                                                         <i class="bx bx-money"></i>
                                                     @else
@@ -61,7 +61,7 @@
                                                 </span>
                                             @else
                                                 @if ($invoice['payment_method'])
-                                                    <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }} - {{ $invoice['payment_method'] }}
+                                                    <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['payment_method'] }} - {{ $invoice['status_invoice'] }}
                                                         @if ($invoice['payment_method'] == 'Cash')
                                                             <i class="bx bx-money"></i>
                                                         @else

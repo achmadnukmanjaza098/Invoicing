@@ -12,8 +12,8 @@
 @section('content')
 
     @component('components.breadcrumb')
-        @slot('li_1') Master Data @endslot
-        @slot('title') Customer @endslot
+        @slot('li_1') Customer @endslot
+        @slot('title') List Customer @endslot
     @endcomponent
 
     <div class="row">

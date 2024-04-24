@@ -45,6 +45,7 @@
                 </li>
 
                 @if (Auth::user()->role === "admin")
+                    <!--
                     <li>
                         <a href="{{ route('monitoring-invoice') }}" class="waves-effect">
                             <i class="bx bx-history"></i>
@@ -58,7 +59,7 @@
                             <span key="t-monthly-target">Master Monthly Target</span>
                         </a>
                     </li>
-
+                    -->
                     <li>
                         <a href="{{ route('report') }}" class="waves-effect">
                             <i class="bx bxs-report"></i>
