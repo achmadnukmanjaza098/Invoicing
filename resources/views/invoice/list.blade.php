@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    @lang('translation.Orders')
+    Web Invoicing | Invoice
 @endsection
 
 @section('css')
@@ -52,21 +52,22 @@
                                     <td>
                                         @if ($invoice['status_payment'] == 'Paid')
                                                 <span class="badge badge-pill badge-soft-success font-size-12">
-                                                    {{ $invoice['payment_method'] }} - {{ $invoice['status_payment'] }}
                                                     @if ($invoice['payment_method'] == 'Cash')
                                                         <i class="bx bx-money"></i>
                                                     @else
                                                         <i class="bx bx-transfer-alt"></i>
                                                     @endif
+                                                    {{ $invoice['payment_method'] }} - {{ $invoice['status_payment'] }}
                                                 </span>
                                             @else
                                                 @if ($invoice['payment_method'])
-                                                    <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['payment_method'] }} - {{ $invoice['status_invoice'] }}
+                                                    <span class="badge badge-pill badge-soft-danger font-size-12">
                                                         @if ($invoice['payment_method'] == 'Cash')
                                                             <i class="bx bx-money"></i>
                                                         @else
                                                             <i class="bx bx-transfer-alt"></i>
                                                         @endif
+                                                        {{ $invoice['payment_method'] }} - {{ $invoice['status_invoice'] }}
                                                     </span>
                                                 @else
                                                     <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }}</span>
@@ -75,8 +76,8 @@
                                     </td>
                                     <td>{{ $invoice['brand'] }}</td>
                                     <td>{{ $invoice['customer'] }}</td>
-                                    <td>{{ $invoice['date'] }}</td>
-                                    <td>{{ $invoice['total'] }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($invoice['date'])->format('d - m - Y') }}</td>
+                                    <td>Rp {{ number_format($invoice['total'], 2) }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i

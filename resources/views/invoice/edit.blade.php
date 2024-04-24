@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    @lang('translation.Form_Repeater')
+    Web Invoicing | Invoice
 @endsection
 
 @section('css')
@@ -153,8 +153,8 @@
                                                             <tr>
                                                                 <td>{{ $detail_invoice['item'] }}</td>
                                                                 <td>{{ $detail_invoice['qty'] }}</td>
-                                                                <td>{{ $detail_invoice['price'] }}</td>
-                                                                <td>{{ $detail_invoice['total'] }}</td>
+                                                                <td>{{ number_format($detail_invoice['price'], 2) }}</td>
+                                                                <td>{{ number_format($detail_invoice['total'], 2) }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>

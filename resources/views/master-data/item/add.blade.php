@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
-@section('title') @lang('translation.Form_Repeater') @endsection
+@section('title')
+    Web Invoicing | Item
+@endsection
 
 @section('css')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />

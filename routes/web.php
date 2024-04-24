@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function() {
 
     // report
     Route::get('report', [ReportController::class, 'report'])->name('report');
+    Route::post('filterReport', [ReportController::class, 'filterReport'])->name('filterReport');
+    Route::get('exportReport', [ReportController::class, 'exportReport'])->name('exportReport');
 });
 
 Route::post('/update-profile/{id}', [HomeController::class, 'updateProfile'])->name('updateProfile');

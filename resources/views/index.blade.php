@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title') @lang('translation.Dashboards') @endsection
+@section('title') Web Invoicing | Dashboard @endsection
 
 @section('content')
 

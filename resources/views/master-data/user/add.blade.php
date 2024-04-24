@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    @lang('translation.Form_Repeater')
+    Web Invoicing | User
 @endsection
 
 @section('css')

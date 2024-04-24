@@ -152,13 +152,23 @@ class HomeController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string'],
+            'password_confirmation' => ['required', 'string'],
         ]);
+
+        if ($request->get('password') !== $request->get('password_confirmation')) {
+            return response()->json([
+                'isSuccess' => false,
+                'code' => 'password_confirmation',
+                'Message' => "Your New password & Confirm Password does not matches. Please try again."
+            ], 200);
+        }
 
         if (!(Hash::check($request->get('current_password'), Auth::user()->password))) {
             return response()->json([
                 'isSuccess' => false,
-                'Message' => "Your Current password does not matches with the password you provided. Please try again."
+                'code' => 'password',
+                'Message' => "Your Current Password does not matches with the password you provided. Please try again."
             ], 200); // Status code
         } else {
             $user = User::find($id);

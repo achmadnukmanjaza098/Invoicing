@@ -27,11 +27,15 @@
                 $('#current_passwordError').text('');
                 $('#passwordError').text('');
                 $('#password_confirmError').text('');
-                if(response.isSuccess == false){ 
+                if(response.code == 'password'){
                     $('#current_passwordError').text(response.Message);
-                }else if(response.isSuccess == true){
-                    setTimeout(function () {   
-                        window.location.href = "{{ route('root') }}"; 
+                }
+                if(response.code == 'password_confirmation'){
+                    $('#password_confirmError').text(response.Message);
+                }
+                if(response.isSuccess == true){
+                    setTimeout(function () {
+                        window.location.href = "{{ route('root') }}";
                     }, 1000);
                 }
             },

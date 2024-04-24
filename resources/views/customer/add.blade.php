@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
-@section('title') @lang('translation.Form_Repeater') @endsection
+@section('title')
+    Web Invoicing | Customer
+@endsection
 
 @section('css')
 @endsection

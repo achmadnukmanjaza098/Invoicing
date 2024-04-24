@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    @lang('translation.Orders')
+    Web Invoicing | Item
 @endsection
 
 @section('css')
