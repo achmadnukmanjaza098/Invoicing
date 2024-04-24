@@ -39,17 +39,16 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <button type="button" class="btn btn-success waves-effect btn-label waves-light mb-3"
-                                id="export-button">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-success waves-effect btn-label waves-light" id="export-button">
                                 <i class="mdi mdi-download label-icon me-1"></i>
                                 Export Report
                             </button>
                         </div>
 
-                        <div class="d-flex align-items-center gap-3">
-                            <form id="filter-form" method="POST" action="{{ route('filterReport') }}">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <form id="filter-form" method="POST" action="{{ route('filterReport') }}" class="d-flex flex-wrap gap-3">
                                 @csrf
                                 <select id="status_invoice" name="status_invoice" class="form-control select2" style="width: 200px" value="{{ $status_invoice }}">
                                     <option value="" {{ $payment_method == '' ? 'selected' : '' }}>All Status Invoice</option>
@@ -68,7 +67,7 @@
                                 <button type="submit" class="btn btn-primary" id="apply-filter-button">Apply Filter</button>
                             </form>
                         </div>
-                    </div>
+                    </div><br>
 
                     <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
                         <thead>
