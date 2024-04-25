@@ -38,9 +38,13 @@ class InvoiceController extends Controller
 
         if ($request->id) {
             $invoice = Invoice::findOrFail($request->id);
-            $detail_invoices = DetailInvoice::join('items', 'items.id', '=', 'detail_invoices.item_id')
-                                            ->where('invoice_id', $invoice->id)
-                                            ->select('detail_invoices.*', 'items.name as item')
+            // $detail_invoices = DetailInvoice::join('items', 'items.id', '=', 'detail_invoices.item_id')
+            //                                 ->where('invoice_id', $invoice->id)
+            //                                 ->select('detail_invoices.*', 'items.name as item')
+            //                                 ->get();
+
+            $detail_invoices = DetailInvoice::where('invoice_id', $invoice->id)
+                                            ->select('detail_invoices.*')
                                             ->get();
 
             return view('invoice.edit')
@@ -66,7 +70,9 @@ class InvoiceController extends Controller
             'due_date' => 'required',
             'brand_id' => 'required',
             'detail_items' => 'required',
-            'detail_items.*.item_id' => 'required',
+            'detail_items.*.item_id' => 'nullable',
+            'detail_items.*.item' => 'required',
+            'detail_items.*.category_id' => 'required',
             'detail_items.*.qty' => 'required',
             'detail_items.*.price' => 'required',
             'detail_items.*.amount' => 'required',
@@ -89,7 +95,8 @@ class InvoiceController extends Controller
             foreach ($request->detail_items as $value) {
                 $detail_invoice = DetailInvoice::create([
                     'invoice_id' => $invoice->id,
-                    'item_id' => $value['item_id'],
+                    'item' => $value['item'],
+                    'category_id' => $value['category_id'],
                     'qty' => str_replace(",", "", $value['qty']),
                     'price' => str_replace(",", "", $value['price']),
                     'total' => str_replace(",", "", $value['amount']),

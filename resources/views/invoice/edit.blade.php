@@ -143,8 +143,9 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="width: 30%">Item</th>
-                                                            <th style="width: 18%">Qty</th>
-                                                            <th style="width: 19%">Price</th>
+                                                            <th style="width: 10%">Qty</th>
+                                                            <th style="width: 10%">Category</th>
+                                                            <th style="width: 17%">Price</th>
                                                             <th style="width: 20%">Amount</th>
                                                         </tr>
                                                     </thead>
@@ -153,6 +154,7 @@
                                                             <tr>
                                                                 <td>{{ $detail_invoice['item'] }}</td>
                                                                 <td>{{ $detail_invoice['qty'] }}</td>
+                                                                <td>{{ $detail_invoice['category_id'] }}</td>
                                                                 <td>{{ number_format($detail_invoice['price'], 2) }}</td>
                                                                 <td>{{ number_format($detail_invoice['total'], 2) }}</td>
                                                             </tr>

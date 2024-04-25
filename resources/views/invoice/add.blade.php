@@ -91,14 +91,23 @@
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="customer_id">Customer * :</label>
-                                                            <select class="form-control select2" id="customer_id"
-                                                                name="customer_id">
-                                                                <option value="">Select Customer</option>
-                                                                @foreach ($customers as $customer)
-                                                                    <option value="{{ $customer->id }}">
-                                                                        {{ $customer->name }}</option>
-                                                                @endforeach
-                                                            </select>
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="flex-grow-1 me-3">
+                                                                    <select class="form-control select2" id="customer_id"
+                                                                        name="customer_id">
+                                                                        <option value="">Select Customer</option>
+                                                                        @foreach ($customers as $customer)
+                                                                            <option value="{{ $customer->id }}">
+                                                                                {{ $customer->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                <button type="button" class="btn btn-success waves-effect btn-label waves-light"
+                                                                    onclick="window.location='{{ route('showFormCustomer') }}'">
+                                                                    <i class="bx bx-user-plus label-icon me-1"></i>
+                                                                    Add Customer
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="brand_id">Brand * :</label>
@@ -152,9 +161,10 @@
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 29%">Item</th>
-                                                                <th style="width: 16%">Qty</th>
-                                                                <th style="width: 18%">Price</th>
-                                                                <th style="width: 19%">Amount</th>
+                                                                <th style="width: 12%">Qty</th>
+                                                                <th style="width: 12%">Category</th>
+                                                                <th style="width: 12%">Price</th>
+                                                                <th style="width: 15%">Amount</th>
                                                                 <th style="width: 5%">Action</th>
                                                             </tr>
                                                         </thead>
@@ -186,7 +196,7 @@
         $(document).ready(function() {
             $(document).on('change', 'select[name="brand_id"]', function() {
                 var selectedBrandId = $(this).val();
-                populateItems(selectedBrandId)
+                // populateItems(selectedBrandId)
             });
 
             function updateTotalAmount() {
@@ -215,15 +225,26 @@
             var rowCount = 0;
 
             function addRow(selectedBrandId) {
+                // select item
+                // <td>
+                //     <select class="form-control select2" name="detail_items[${rowCount}][item_id]" disabled>
+                //         <option value="">Select Item</option>
+                //     </select>
+                // </td>
                 var newRow = `
                     <tr id="row${rowCount}">
                         <td>
-                            <select class="form-control select2" name="detail_items[${rowCount}][item_id]" disabled>
-                                <option value="">Select Item</option>
-                            </select>
+                            <input type="text" class="form-control table-input-height" name="detail_items[${rowCount}][item]" placeholder="Enter Item...">
                         </td>
                         <td>
                             <input type="text" class="form-control table-input-height" name="detail_items[${rowCount}][qty]" placeholder="Enter Qty...">
+                        </td>
+                        <td>
+                            <select class="form-control select2" name="detail_items[${rowCount}][category_id]">
+                                <option value="">Select Category</option>
+                                <option value="Category 1">Category 1</option>
+                                <option value="Category 2">Category 2</option>
+                            </select>
                         </td>
                         <td>
                             <input type="text" class="form-control table-input-height" name="detail_items[${rowCount}][price]" placeholder="Enter Price...">
@@ -239,7 +260,7 @@
                 $('#detail_invoices').append(newRow);
                 $('.select2').select2();
 
-                if (selectedBrandId) populateItems(selectedBrandId);
+                // if (selectedBrandId) populateItems(selectedBrandId);
 
                 rowCount++;
             }
@@ -259,11 +280,11 @@
 
             $('#add').click(function() {
                 var selectedBrandId = $('#brand_id').val();
-                if (selectedBrandId) {
+                // if (selectedBrandId) {
                     addRow(selectedBrandId);
-                } else {
-                    alert('Please select a brand first.');
-                }
+                // } else {
+                //     alert('Please select a brand first.');
+                // }
             });
 
             $(document).on('click', '.btn_remove', function() {
