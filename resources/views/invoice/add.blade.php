@@ -89,23 +89,21 @@
                                                             <input class="form-control" type="text" name="order_id"
                                                                 placeholder="Enter Order Id...">
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label for="customer_id">Customer * :</label>
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <div class="flex-grow-1 me-3">
-                                                                    <select class="form-control select2" id="customer_id"
-                                                                        name="customer_id">
-                                                                        <option value="">Select Customer</option>
-                                                                        @foreach ($customers as $customer)
-                                                                            <option value="{{ $customer->id }}">
-                                                                                {{ $customer->name }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-12 col-md-7">
+                                                                <label for="customer_id">Customer * :</label>
+                                                                <select class="form-control select2" id="customer_id" name="customer_id">
+                                                                    <option value="">Select Customer</option>
+                                                                    @foreach ($customers as $customer)
+                                                                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-12 col-md-3">
                                                                 <button type="button" class="btn btn-success waves-effect btn-label waves-light"
-                                                                    onclick="window.location='{{ route('showFormCustomer') }}'">
-                                                                    <i class="bx bx-user-plus label-icon me-1"></i>
-                                                                    Add Customer
+                                                                        style="margin-top: 1.8rem;"
+                                                                        onclick="window.location='{{ route('showFormCustomer') }}'">
+                                                                    <i class="bx bx-user-plus label-icon me-1"></i> Customer
                                                                 </button>
                                                             </div>
                                                         </div>
