@@ -11,8 +11,10 @@ class DetailInvoice extends Model
 
     protected $fillable = [
         'invoice_id',
+        'item',
         'item_id',
         'qty',
+        'category_id',
         'price',
         'total',
     ];
