@@ -1,14 +1,19 @@
 @extends('layouts.master')
 
-@section('title') Web Invoicing | Dashboard @endsection
+@section('title')
+    Web Invoicing | Dashboard
+@endsection
 
 @section('content')
-
     @component('components.breadcrumb')
-        @slot('li_1') Dashboards @endslot
-        @slot('title') Dashboard @endslot
+        @slot('li_1')
+            Dashboards
+        @endslot
+        @slot('title')
+            Dashboard
+        @endslot
     @endcomponent
-    
+
     <div class="row">
         <div class="col-xl-12">
             <div class="card overflow-hidden">
@@ -17,46 +22,70 @@
                         <div class="col-3">
                             <div class="text-primary p-3">
                                 <h5 class="text-primary">Welcome Back !</h5>
-                                <p>DAMAIJAYA Dashboard</p>
+                                <p>Hallo Selamat {{ $timeOfDay }} {{ ucfirst(Auth::user()->name) }}</p>
                             </div>
                         </div>
                         <div class="col-9 text-sm-end">
-                            <img src="{{ asset('/assets/images/profile-img.png') }}" alt="" class="img-fluid" style="height:100px;">
+                            <img src="{{ asset('/assets/images/profile-img.png') }}" alt="" class="img-fluid"
+                                style="height:100px;">
                         </div>
                     </div>
                 </div>
-                <div class="card-body pt-0">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="avatar-md profile-user-wid mb-4">
-                                <img src="{{ asset('/assets/images/users/default.jpeg') }}" alt="" class="img-thumbnail rounded-circle">
+                <div class="card-body pt-4">
+                    <div class="card mini-stats-wid">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card-body" style="background-color:#dbebfa">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1">
+                                            <h4 class="mb-2 font-size-20">{{ $order }}</h4>
+                                            <p class="text-muted mb-0 text-truncate"><b>Order</b></p>
+                                            <p class="text-muted fw-medium font-size-12">{{ $percentageOrder }}</p>
+                                        </div>
+
+                                        <div class="flex-shrink-0 align-self-center">
+                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                                <span class="avatar-title">
+                                                    <i class="bx bx-cart-alt font-size-24"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <h5 class="font-size-15 text-truncate">{{ucfirst(Auth::user()->name)}}</h5>
-                            <h5 class="font-size-15 text-truncate">Role : {{ucfirst(Auth::user()->role)}}</h5>
-                            <p class="text-muted mb-0 text-truncate font-size-11">{{ucfirst(Auth::user()->email)}}</p>
-                        </div>
+                            <div class="col-4">
+                                <div class="card-body" style="background-color:#dbebfa">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1">
+                                            <h4 class="mb-2 font-size-20">{{ $product }}</h4>
+                                            <p class="text-muted mb-0 text-truncate"><b>Produk Dikerjakan</b></p>
+                                            <p class="text-muted fw-medium font-size-12">{{ $percentageProduct }}</p>
+                                        </div>
 
-                        <div class="col-sm-9">
-                            <div class="pt-4">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body" style="background-color:#dbebfa">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <p class="text-muted mb-0 text-truncate"><b>Invoice</b></p>
-                                                        <p class="text-muted fw-medium font-size-12">Total ({{ $invoice }})</p>
-                                                        <h4 class="mb-0 font-size-16">Rp. {{ number_format($invoicePrice, 2) }}</h4>
-                                                    </div>
+                                        <div class="flex-shrink-0 align-self-center">
+                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                                <span class="avatar-title">
+                                                    <i class="bx bx-box font-size-24"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card-body" style="background-color:#dbebfa">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1">
+                                            <h4 class="mb-2 font-size-20">Rp {{ number_format($income, 2) }}</h4>
+                                            <p class="text-muted mb-0 text-truncate"><b>Pendapatan Kotor</b></p>
+                                            <p class="text-muted fw-medium font-size-12">{{ $percentageIncome }}</p>
+                                        </div>
 
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                                            <span class="avatar-title">
-                                                                <i class="bx bx-cart-alt font-size-24"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        <div class="flex-shrink-0 align-self-center">
+                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                                <span class="avatar-title">
+                                                    <i class="bx bx-money font-size-24"></i>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -66,120 +95,82 @@
                     </div>
                 </div>
                 <div class="card-body pt-0">
-                    <div class="row">
-                        <div class="col-sm-3">
-                        </div>
-
-                        <div class="col-sm-9">
-                            <div class="pt-1">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body" style="background-color:#dbebfa">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <p class="text-muted mb-0 text-truncate"><b>Invoice</b></p>
-                                                        <p class="text-muted fw-medium font-size-12">Belum DP ({{ $invoiceBelumDp }})</p>
-                                                        <h4 class="mb-0 font-size-16">Rp. {{ number_format($invoiceBelumDpPrice, 2) }}</h4>
-                                                    </div>
-
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                                            <span class="avatar-title">
-                                                                <i class="bx bx-loader-alt font-size-24"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div class="card mini-stats-wid">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card-body" style="background-color:#dbebfa">
+                                    <div style="display: flex; align-items: center;">
+                                        <p class="text-muted mb-0 text-truncate"><b>Produk Terlaris</b></p>
+                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary"
+                                            style="width: 24px; height: 24px; margin-left: 8px;">
+                                            <span class="avatar-title" style="padding: 0;">
+                                                <i class="bx bx-check-circle" style="font-size: 16px;"></i>
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body" style="background-color:#dbebfa">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <p class="text-muted mb-0 text-truncate"><b>Invoice</b></p>
-                                                        <p class="text-muted fw-medium font-size-12">Sudah DP ({{ $invoiceSudahDp }})</p>
-                                                        <h4 class="mb-0 font-size-16">Rp. {{ number_format($invoiceSudahDpPrice, 2) }}</h4>
-                                                    </div>
 
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                                            <span class="avatar-title">
-                                                                <i class="bx bx-calculator font-size-24"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <br>
+
+                                    <table class="table mb-0" style="width: 100%;">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>Produk</th>
+                                            <th>Qty</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($bestSellerProduct as $key => $item)
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $item['item'] }}</td>
+                                                    <td>{{ $item['total_qty'] }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="row">
-                        <div class="col-sm-3">
-                        </div>    
-                        <div class="col-sm-9">
-                            <div class="pt-1">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body" style="background-color:#dbebfa">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <p class="text-muted mb-0 text-truncate"><b>Invoice</b></p>
-                                                        <p class="text-muted fw-medium font-size-12">Menunggu Pelunasan ({{ $invoiceMenungguPelunasan }})</p>
-                                                        <h4 class="mb-0 font-size-16">Rp. {{ number_format($invoiceMenungguPelunasanPrice, 2) }}</h4>
-                                                    </div>
-
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                                            <span class="avatar-title">
-                                                                <i class="bx bx-time font-size-24"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <div class="col-8">
+                                <div class="card-body" style="background-color:#dbebfa">
+                                    <div style="display: flex; align-items: center;">
+                                        <p class="text-muted mb-0 text-truncate"><b>Produk Terlaris</b></p>
+                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary"
+                                            style="width: 24px; height: 24px; margin-left: 8px;">
+                                            <span class="avatar-title" style="padding: 0;">
+                                                <i class="bx bx-user-pin" style="font-size: 16px;"></i>
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body" style="background-color:#dbebfa">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <p class="text-muted mb-0 text-truncate"><b>Invoice</b></p>
-                                                        <p class="text-muted fw-medium font-size-12">Lunas ({{ $invoiceLunas }})</p>
-                                                        <h4 class="mb-0 font-size-16">Rp. {{ number_format($invoiceLunasPrice, 2) }}</h4>
-                                                    </div>
 
-                                                    <div class="flex-shrink-0 align-self-center">
-                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                                            <span class="avatar-title">
-                                                                <i class="bx bx-dollar font-size-24"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <br>
+
+                                    <table class="table mb-0" style="width: 100%;">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>Name Sales</th>
+                                            <th>Jumlah Order</th>
+                                            <th>Jumlah Produk</th>
+                                            <th>Total Pendapatan</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($salesReport as $key => $item)
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $item->name }}</td>
+                                                    <td>{{ $item->total_order }}</td>
+                                                    <td>{{ $item->total_qty }}</td>
+                                                    <td>Rp {{ number_format($item->total_pendapatan, 2) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-
-
 @endsection
 @section('script')
     <!-- apexcharts -->

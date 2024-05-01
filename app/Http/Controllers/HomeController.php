@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailInvoice;
 use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
@@ -31,65 +33,209 @@ class HomeController extends Controller
     {
 
         if (view()->exists($request->path())) {
-            $invoice = Invoice::count();
-            $invoicePrice = Invoice::sum('total');
+            $user = Auth::user()->role !== 'admin' ? Auth::user()->id : '';
 
-            $invoiceBelumDp = Invoice::where('status_invoice', '=', 'Belum DP')->count();
-            $invoiceBelumDpPrice = Invoice::where('status_invoice', '=', 'Belum DP')->sum('total');
+            $currentMonth = date('m');
+            $labelCurrentMonth = date('M');
+            $currentYear = date('Y');
 
-            $invoiceSudahDp = Invoice::where('status_invoice', '=', 'Sudah DP')->count();
-            $invoiceSudahDpPrice = Invoice::where('status_invoice', '=', 'Sudah DP')->sum('total');
+            $previousMonth = ($currentMonth == 1) ? 12 : $currentMonth - 1;
+            $previousYear = ($previousMonth == 12) ? $currentYear - 1 : $currentYear;
 
-            $invoiceMenungguPelunasan = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->count();
-            $invoiceMenungguPelunasanPrice = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->sum('total');
+            $currentHour = date('H');
+            if ($currentHour >= 6 && $currentHour < 12) {
+                $timeOfDay = 'Pagi';
+            } elseif ($currentHour >= 12 && $currentHour < 16) {
+                $timeOfDay = 'Siang';
+            } elseif ($currentHour >= 16 && $currentHour < 20) {
+                $timeOfDay = 'Sore';
+            } else {
+                $timeOfDay = 'Malam';
+            }
 
-            $invoiceLunas = Invoice::where('status_invoice', '=', 'Lunas')->count();
-            $invoiceLunasPrice = Invoice::where('status_invoice', '=', 'Lunas')->sum('total');
+            $currentOrder = Invoice::whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->count();
+
+            $previousOrder = Invoice::whereMonth('created_at', $previousMonth)
+                ->whereYear('created_at', $previousYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->count();
+
+            $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
+            $percentageOrder = $this->labelPrecentace($percentageOrder).' '.$percentageOrder.'% dari Bulan '.$labelCurrentMonth;
+
+            $currentProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->sum('qty');
+
+            $previousProduct = DetailInvoice::whereMonth('created_at', $previousMonth)
+                ->whereYear('created_at', $previousYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->sum('qty');
+
+            $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
+            $percentageProduct = $this->labelPrecentace($percentageProduct).' '.$percentageProduct.'% dari Bulan '.$labelCurrentMonth;
+
+            $currentIncome = Invoice::whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->sum('total');
+
+            $previousIncome = Invoice::whereMonth('created_at', $previousMonth)
+                ->whereYear('created_at', $previousYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->sum('total');
+
+            $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
+            $percentageIncome = $this->labelPrecentace($percentageIncome).' '.$percentageIncome.'% dari Bulan '.$labelCurrentMonth;
+
+            $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->where('created_by', 'like', '%' . $user . '%')
+                ->groupBy('item')
+                ->orderBy('total_qty', 'desc')
+                ->select('item', DB::raw('sum(qty) as total_qty'))
+                ->limit(3)
+                ->get();
+
+            $salesReport = Invoice::select([
+                    'users.name as name',
+                    DB::raw("(SELECT count(*) FROM invoices WHERE created_by = invoices.created_by AND MONTH(created_at) = {$currentMonth} AND YEAR(created_at) = {$currentYear}) as total_order"),
+                    DB::raw('SUM(detail_invoices.qty) as total_qty'),
+                    DB::raw('SUM(invoices.total) as total_pendapatan')
+                ])
+                ->join('detail_invoices', 'detail_invoices.invoice_id', '=', 'invoices.id')
+                ->join('users', 'users.id', '=', 'invoices.created_by')
+                ->whereMonth('invoices.created_at', $currentMonth)
+                ->whereYear('invoices.created_at', $currentYear)
+                ->where('invoices.created_by', 'like', '%' . $user . '%')
+                ->groupBy('invoices.created_by')
+                ->get();
 
             return view($request->path())
-                    ->with('invoice', $invoice)
-                    ->with('invoicePrice', $invoicePrice)
-                    ->with('invoiceBelumDp', $invoiceBelumDp)
-                    ->with('invoiceBelumDpPrice', $invoiceBelumDpPrice)
-                    ->with('invoiceSudahDp', $invoiceSudahDp)
-                    ->with('invoiceSudahDpPrice', $invoiceSudahDpPrice)
-                    ->with('invoiceMenungguPelunasan', $invoiceMenungguPelunasan)
-                    ->with('invoiceMenungguPelunasanPrice', $invoiceMenungguPelunasanPrice)
-                    ->with('invoiceLunas', $invoiceLunas)
-                    ->with('invoiceLunasPrice', $invoiceLunasPrice);
+                    ->with('order', round($currentOrder, 0))
+                    ->with('percentageOrder', $percentageOrder)
+                    ->with('product', round($currentProduct, 0))
+                    ->with('percentageProduct', $percentageProduct)
+                    ->with('income', round($currentIncome, 0))
+                    ->with('percentageIncome', $percentageIncome)
+                    ->with('bestSellerProduct', $bestSellerProduct)
+                    ->with('salesReport', $salesReport)
+                    ->with('timeOfDay', $timeOfDay);
         }
         return abort(404);
     }
 
     public function root()
     {
-        $invoice = Invoice::count();
-        $invoicePrice = Invoice::sum('total');
+        $user = Auth::user()->role !== 'admin' ? Auth::user()->id : '';
 
-        $invoiceBelumDp = Invoice::where('status_invoice', '=', 'Belum DP')->count();
-        $invoiceBelumDpPrice = Invoice::where('status_invoice', '=', 'Belum DP')->sum('total');
+        $currentMonth = date('m');
+        $labelCurrentMonth = date('M');
+        $currentYear = date('Y');
 
-        $invoiceSudahDp = Invoice::where('status_invoice', '=', 'Sudah DP')->count();
-        $invoiceSudahDpPrice = Invoice::where('status_invoice', '=', 'Sudah DP')->sum('total');
+        $previousMonth = ($currentMonth == 1) ? 12 : $currentMonth - 1;
+        $previousYear = ($previousMonth == 12) ? $currentYear - 1 : $currentYear;
 
-        $invoiceMenungguPelunasan = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->count();
-        $invoiceMenungguPelunasanPrice = Invoice::where('status_invoice', '=', 'Menunggu Pelunasan')->sum('total');
+        $currentHour = date('H');
+        if ($currentHour >= 6 && $currentHour < 12) {
+            $timeOfDay = 'Pagi';
+        } elseif ($currentHour >= 12 && $currentHour < 16) {
+            $timeOfDay = 'Siang';
+        } elseif ($currentHour >= 16 && $currentHour < 20) {
+            $timeOfDay = 'Sore';
+        } else {
+            $timeOfDay = 'Malam';
+        }
 
-        $invoiceLunas = Invoice::where('status_invoice', '=', 'Lunas')->count();
-        $invoiceLunasPrice = Invoice::where('status_invoice', '=', 'Lunas')->sum('total');
+        $currentOrder = Invoice::whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->count();
+
+        $previousOrder = Invoice::whereMonth('created_at', $previousMonth)
+            ->whereYear('created_at', $previousYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->count();
+
+        $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
+        $percentageOrder = $this->labelPrecentace($percentageOrder).' '.$percentageOrder.'% dari Bulan '.$labelCurrentMonth;
+
+        $currentProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->sum('qty');
+
+        $previousProduct = DetailInvoice::whereMonth('created_at', $previousMonth)
+            ->whereYear('created_at', $previousYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->sum('qty');
+
+        $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
+        $percentageProduct = $this->labelPrecentace($percentageProduct).' '.$percentageProduct.'% dari Bulan '.$labelCurrentMonth;
+
+        $currentIncome = Invoice::whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->sum('total');
+
+        $previousIncome = Invoice::whereMonth('created_at', $previousMonth)
+            ->whereYear('created_at', $previousYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->sum('total');
+
+        $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
+        $percentageIncome = $this->labelPrecentace($percentageIncome).' '.$percentageIncome.'% dari Bulan '.$labelCurrentMonth;
+
+        $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->where('created_by', 'like', '%' . $user . '%')
+            ->groupBy('item')
+            ->orderBy('total_qty', 'desc')
+            ->select('item', DB::raw('sum(qty) as total_qty'))
+            ->limit(3)
+            ->get();
+
+        $salesReport = Invoice::select([
+                'users.name as name',
+                DB::raw("(SELECT count(*) FROM invoices WHERE created_by = invoices.created_by AND MONTH(created_at) = {$currentMonth} AND YEAR(created_at) = {$currentYear}) as total_order"),
+                DB::raw('SUM(detail_invoices.qty) as total_qty'),
+                DB::raw('SUM(invoices.total) as total_pendapatan')
+            ])
+            ->join('detail_invoices', 'detail_invoices.invoice_id', '=', 'invoices.id')
+            ->join('users', 'users.id', '=', 'invoices.created_by')
+            ->whereMonth('invoices.created_at', $currentMonth)
+            ->whereYear('invoices.created_at', $currentYear)
+            ->where('invoices.created_by', 'like', '%' . $user . '%')
+            ->groupBy('invoices.created_by')
+            ->get();
 
         return view('index')
-                ->with('invoice', $invoice)
-                ->with('invoicePrice', $invoicePrice)
-                ->with('invoiceBelumDp', $invoiceBelumDp)
-                ->with('invoiceBelumDpPrice', $invoiceBelumDpPrice)
-                ->with('invoiceSudahDp', $invoiceSudahDp)
-                ->with('invoiceSudahDpPrice', $invoiceSudahDpPrice)
-                ->with('invoiceMenungguPelunasan', $invoiceMenungguPelunasan)
-                ->with('invoiceMenungguPelunasanPrice', $invoiceMenungguPelunasanPrice)
-                ->with('invoiceLunas', $invoiceLunas)
-                ->with('invoiceLunasPrice', $invoiceLunasPrice);
+                ->with('order', round($currentOrder, 0))
+                ->with('percentageOrder', $percentageOrder)
+                ->with('product', round($currentProduct, 0))
+                ->with('percentageProduct', $percentageProduct)
+                ->with('income', round($currentIncome, 0))
+                ->with('percentageIncome', $percentageIncome)
+                ->with('bestSellerProduct', $bestSellerProduct)
+                ->with('salesReport', $salesReport)
+                ->with('timeOfDay', $timeOfDay);
+    }
 
+    public function labelPrecentace($percentage)
+    {
+        if ($percentage > 0) {
+            $labelPercentage = 'Naik';
+        } else if ($percentage < 0){
+            $labelPercentage = 'Turun';
+        } else {
+            $labelPercentage = 'Sama Dengan';
+        }
+
+        return $labelPercentage;
     }
 
     /*Language Translation*/
