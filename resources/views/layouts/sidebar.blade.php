@@ -7,7 +7,7 @@
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-                <li class="menu-title" key="t-menu">@lang('translation.Menu')</li>
+                <li class="menu-title" key="t-menu">Menu</li>
 
                 <li>
                     <a href="{{ route('index') }}" class="waves-effect">

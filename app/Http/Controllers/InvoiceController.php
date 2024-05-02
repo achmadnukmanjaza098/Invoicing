@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\DetailInvoice;
 use App\Models\Invoice;
@@ -35,6 +36,7 @@ class InvoiceController extends Controller
                         ->get();
         $items = Item::where('active', '=', 1)->get();
         $customers = Customer::where('active', '=', 1)->get();
+        $categories = Category::where('active', '=', 1)->get();
 
         if ($request->id) {
             $invoice = Invoice::findOrFail($request->id);
@@ -43,8 +45,9 @@ class InvoiceController extends Controller
             //                                 ->select('detail_invoices.*', 'items.name as item')
             //                                 ->get();
 
-            $detail_invoices = DetailInvoice::where('invoice_id', $invoice->id)
-                                            ->select('detail_invoices.*')
+            $detail_invoices = DetailInvoice::join('categories', 'categories.id', '=', 'detail_invoices.category_id')
+                                            ->where('invoice_id', $invoice->id)
+                                            ->select('detail_invoices.*', 'categories.name as category_name')
                                             ->get();
 
             return view('invoice.edit')
@@ -56,6 +59,7 @@ class InvoiceController extends Controller
         } else {
             return view('invoice.add')
                         ->with('items', $items)
+                        ->with('categories', $categories)
                         ->with('customers', $customers)
                         ->with('brands', $brands);
         }

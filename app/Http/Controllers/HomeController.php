@@ -141,11 +141,11 @@ class HomeController extends Controller
         $previousYear = ($previousMonth == 12) ? $currentYear - 1 : $currentYear;
 
         $currentHour = date('H');
-        if ($currentHour >= 6 && $currentHour < 12) {
+        if ($currentHour >= 23 && $currentHour < 12) {
             $timeOfDay = 'Pagi';
-        } elseif ($currentHour >= 12 && $currentHour < 16) {
+        } elseif ($currentHour >= 12 && $currentHour < 15) {
             $timeOfDay = 'Siang';
-        } elseif ($currentHour >= 16 && $currentHour < 20) {
+        } elseif ($currentHour >= 15 && $currentHour < 19) {
             $timeOfDay = 'Sore';
         } else {
             $timeOfDay = 'Malam';

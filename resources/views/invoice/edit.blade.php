@@ -154,7 +154,7 @@
                                                             <tr>
                                                                 <td>{{ $detail_invoice['item'] }}</td>
                                                                 <td>{{ $detail_invoice['qty'] }}</td>
-                                                                <td>{{ $detail_invoice['category_id'] }}</td>
+                                                                <td>{{ $detail_invoice['category_name'] }}</td>
                                                                 <td>{{ number_format($detail_invoice['price'], 2) }}</td>
                                                                 <td>{{ number_format($detail_invoice['total'], 2) }}</td>
                                                             </tr>

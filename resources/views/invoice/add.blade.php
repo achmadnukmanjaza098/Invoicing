@@ -240,8 +240,6 @@
                         <td>
                             <select class="form-control select2" name="detail_items[${rowCount}][category_id]">
                                 <option value="">Select Category</option>
-                                <option value="Category 1">Category 1</option>
-                                <option value="Category 2">Category 2</option>
                             </select>
                         </td>
                         <td>
@@ -259,6 +257,7 @@
                 $('.select2').select2();
 
                 // if (selectedBrandId) populateItems(selectedBrandId);
+                populateCategory();
 
                 rowCount++;
             }
@@ -274,6 +273,17 @@
                 });
 
                 $('select[name^="detail_items"][name$="[item_id]"]').last().html(options).prop('disabled', false);
+            }
+
+            function populateCategory() {
+                var categories = {!! json_encode($categories) !!}
+
+                var options = '<option value="">Select Category</option>';
+                categories.forEach(function(item) {
+                    options += '<option value="' + item.id + '">' + item.name + '</option>';
+                });
+
+                $('select[name^="detail_items"][name$="[category_id]"]').last().html(options).prop('disabled', false);
             }
 
             $('#add').click(function() {
