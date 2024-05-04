@@ -80,6 +80,7 @@ Route::post('/update-profile/{id}', [HomeController::class, 'updateProfile'])->n
 Route::post('/update-password/{id}', [HomeController::class, 'updatePassword'])->name('updatePassword');
 
 Route::get('index', [HomeController::class, 'index'])->name('index');
+Route::post('index', [HomeController::class, 'index'])->name('index');
 
 //Language Translation
 Route::get('index/{locale}', [HomeController::class, 'lang']);

@@ -35,19 +35,28 @@ class HomeController extends Controller
         if (view()->exists($request->path())) {
             $user = Auth::user()->role !== 'admin' ? Auth::user()->id : '';
 
-            $currentMonth = date('m');
-            $labelCurrentMonth = date('M');
-            $currentYear = date('Y');
+            if ($request->currentMonth || $request->currentYear) {
+                $currentMonth = $request->currentMonth;
+                $currentYear = $request->currentYear;
+                $currentDate = $currentYear . '-' . $currentMonth . '-01';
+            } else {
+                $currentMonth = date('m');
+                $currentYear = date('Y');
+                $currentDate = date('Y-m-d');
+            }
+
+            $previousMonth = strtotime('-1 month', strtotime($currentDate));
+            $labelPreviousMonth = date('F', $previousMonth);
 
             $previousMonth = ($currentMonth == 1) ? 12 : $currentMonth - 1;
             $previousYear = ($previousMonth == 12) ? $currentYear - 1 : $currentYear;
 
             $currentHour = date('H');
-            if ($currentHour >= 6 && $currentHour < 12) {
+            if ($currentHour >= 23 && $currentHour < 12) {
                 $timeOfDay = 'Pagi';
-            } elseif ($currentHour >= 12 && $currentHour < 16) {
+            } elseif ($currentHour >= 12 && $currentHour < 15) {
                 $timeOfDay = 'Siang';
-            } elseif ($currentHour >= 16 && $currentHour < 20) {
+            } elseif ($currentHour >= 15 && $currentHour < 19) {
                 $timeOfDay = 'Sore';
             } else {
                 $timeOfDay = 'Malam';
@@ -63,8 +72,10 @@ class HomeController extends Controller
                 ->where('created_by', 'like', '%' . $user . '%')
                 ->count();
 
-            $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
-            $percentageOrder = $this->labelPrecentace($percentageOrder).' '.$percentageOrder.'% dari Bulan '.$labelCurrentMonth;
+            $percentageOrder = 0;
+            if ($currentOrder !== 0) {
+                $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
+            }
 
             $currentProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
                 ->whereYear('created_at', $currentYear)
@@ -76,8 +87,10 @@ class HomeController extends Controller
                 ->where('created_by', 'like', '%' . $user . '%')
                 ->sum('qty');
 
-            $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
-            $percentageProduct = $this->labelPrecentace($percentageProduct).' '.$percentageProduct.'% dari Bulan '.$labelCurrentMonth;
+            $percentageProduct = 0;
+            if ($currentProduct !== 0) {
+                $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
+            }
 
             $currentIncome = Invoice::whereMonth('created_at', $currentMonth)
                 ->whereYear('created_at', $currentYear)
@@ -89,8 +102,10 @@ class HomeController extends Controller
                 ->where('created_by', 'like', '%' . $user . '%')
                 ->sum('total');
 
-            $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
-            $percentageIncome = $this->labelPrecentace($percentageIncome).' '.$percentageIncome.'% dari Bulan '.$labelCurrentMonth;
+            $percentageIncome = 0;
+            if ($currentIncome !== 0) {
+                $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
+            }
 
             $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
                 ->whereYear('created_at', $currentYear)
@@ -116,15 +131,18 @@ class HomeController extends Controller
                 ->get();
 
             return view($request->path())
-                    ->with('order', round($currentOrder, 0))
+                    ->with('order', $currentOrder)
                     ->with('percentageOrder', $percentageOrder)
-                    ->with('product', round($currentProduct, 0))
+                    ->with('product', $currentProduct)
                     ->with('percentageProduct', $percentageProduct)
-                    ->with('income', round($currentIncome, 0))
+                    ->with('income', $currentIncome)
                     ->with('percentageIncome', $percentageIncome)
                     ->with('bestSellerProduct', $bestSellerProduct)
                     ->with('salesReport', $salesReport)
-                    ->with('timeOfDay', $timeOfDay);
+                    ->with('timeOfDay', $timeOfDay)
+                    ->with('currentMonth', $currentMonth ?? '')
+                    ->with('currentYear', $currentYear ?? '')
+                    ->with('labelPreviousMonth', $labelPreviousMonth);
         }
         return abort(404);
     }
@@ -133,9 +151,12 @@ class HomeController extends Controller
     {
         $user = Auth::user()->role !== 'admin' ? Auth::user()->id : '';
 
+        $currentDate = date('Y-m-d');
         $currentMonth = date('m');
-        $labelCurrentMonth = date('M');
         $currentYear = date('Y');
+
+        $previousMonth = strtotime('-1 month', strtotime($currentDate));
+        $labelPreviousMonth = date('F', $previousMonth);
 
         $previousMonth = ($currentMonth == 1) ? 12 : $currentMonth - 1;
         $previousYear = ($previousMonth == 12) ? $currentYear - 1 : $currentYear;
@@ -162,7 +183,6 @@ class HomeController extends Controller
             ->count();
 
         $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
-        $percentageOrder = $this->labelPrecentace($percentageOrder).' '.$percentageOrder.'% dari Bulan '.$labelCurrentMonth;
 
         $currentProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
@@ -175,7 +195,6 @@ class HomeController extends Controller
             ->sum('qty');
 
         $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
-        $percentageProduct = $this->labelPrecentace($percentageProduct).' '.$percentageProduct.'% dari Bulan '.$labelCurrentMonth;
 
         $currentIncome = Invoice::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
@@ -188,7 +207,6 @@ class HomeController extends Controller
             ->sum('total');
 
         $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
-        $percentageIncome = $this->labelPrecentace($percentageIncome).' '.$percentageIncome.'% dari Bulan '.$labelCurrentMonth;
 
         $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
@@ -214,28 +232,18 @@ class HomeController extends Controller
             ->get();
 
         return view('index')
-                ->with('order', round($currentOrder, 0))
+                ->with('order', $currentOrder)
                 ->with('percentageOrder', $percentageOrder)
-                ->with('product', round($currentProduct, 0))
+                ->with('product', $currentProduct)
                 ->with('percentageProduct', $percentageProduct)
-                ->with('income', round($currentIncome, 0))
+                ->with('income', $currentIncome)
                 ->with('percentageIncome', $percentageIncome)
                 ->with('bestSellerProduct', $bestSellerProduct)
                 ->with('salesReport', $salesReport)
-                ->with('timeOfDay', $timeOfDay);
-    }
-
-    public function labelPrecentace($percentage)
-    {
-        if ($percentage > 0) {
-            $labelPercentage = 'Naik';
-        } else if ($percentage < 0){
-            $labelPercentage = 'Turun';
-        } else {
-            $labelPercentage = 'Sama Dengan';
-        }
-
-        return $labelPercentage;
+                ->with('timeOfDay', $timeOfDay)
+                ->with('currentMonth', $currentMonth)
+                ->with('currentYear', $currentYear)
+                ->with('labelPreviousMonth', $labelPreviousMonth);
     }
 
     /*Language Translation*/

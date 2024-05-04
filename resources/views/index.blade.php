@@ -4,6 +4,11 @@
     Web Invoicing | Dashboard
 @endsection
 
+@section('css')
+    <!-- Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+@endsection
+
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
@@ -32,33 +37,19 @@
                     </div>
                 </div>
                 <div class="card-body pt-4">
-                    <div>
-                        <div class="row">
-                            <div class="col-7">
-                            </div>
-                            <div class="col-3">
-                                <select id="month" name="month" class="form-control select2" style="width:250px">
-                                    <option value="01">Januari</option>
-                                    <option value="02">Februari</option>
-                                    <option value="03">Maret</option>
-                                    <option value="04">April</option>
-                                    <option value="05">Mei</option>
-                                    <option value="06">Juni</option>
-                                    <option value="07">Juli</option>
-                                    <option value="08">Agustus</option>
-                                    <option value="09">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
-                                </select>
-                            </div>
-                            <div class="col-2">
-                                <select id="year" name="year" class="form-control select2" style="width:120px">
-                                    <option value="2024">2024</option>
-                                    <option value="2025">2025</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="d-flex align-items-center gap-3 flex-wrap justify-content-end">
+                        <form id="filter-form" method="POST" action="{{ route('index') }}" class="d-flex flex-wrap gap-3">
+                            @csrf
+                            <select id="currentMonth" name="currentMonth" class="form-control select2" style="width: 200px" value="{{ $currentMonth }}">
+                                <option value="" {{ $currentMonth == '' ? 'selected' : '' }}>All Month</option>
+                            </select>
+
+                            <select id="currentYear" name="currentYear" class="form-control select2" style="width: 200px" value="{{ $currentYear }}">
+                                <option value="" {{ $currentYear == '' ? 'selected' : '' }}>All Year</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary" id="apply-filter-button">Apply Filter</button>
+                        </form>
                     </div>
                 </div>
                 <div class="card-body pt-4">
@@ -70,8 +61,21 @@
                                         <div class="flex-grow-1">
                                             <h1 style="font-size:26px">{{ $order }}</h1>
                                             <p class="text-muted mb-0 text-truncate"><b>Order</b></p>
-                                            <p class="text-muted"><span class="text-success me-2"> 12% <i class="mdi mdi-arrow-up"></i> </span> dari Bulan April</p>
-                                            <!--p class="text-muted fw-medium font-size-12">{{ $percentageOrder }}</p-->
+                                            <p class="text-muted">
+                                                @if ($percentageOrder === 0)
+                                                    <span class="text-warning me-2"> {{ $percentageOrder }}%
+                                                        <i class="mdi mdi-equal"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @elseif ($percentageOrder > 0)
+                                                    <span class="text-success me-2"> {{ $percentageOrder }}%
+                                                        <i class="mdi mdi-arrow-up"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @else
+                                                    <span class="text-danger me-2"> {{ $percentageOrder }}%
+                                                        <i class="mdi mdi-arrow-down"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @endif
+                                            </p>
                                         </div>
 
                                         <div class="flex-shrink-0 align-self-center">
@@ -90,8 +94,21 @@
                                         <div class="flex-grow-1">
                                             <h1 style="font-size:26px">{{ $product }}</h1>
                                             <p class="text-muted mb-0 text-truncate"><b>Produk Dikerjakan</b></p>
-                                            <p class="text-muted"><span class="text-success me-2"> 50% <i class="mdi mdi-arrow-up"></i> </span> dari Bulan April</p>
-                                            <!--p class="text-muted fw-medium font-size-12">{{ $percentageProduct }}</p-->
+                                            <p class="text-muted">
+                                                @if ($percentageProduct === 0)
+                                                    <span class="text-warning me-2"> {{ $percentageProduct }}%
+                                                        <i class="mdi mdi-equal"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @elseif ($percentageProduct > 0)
+                                                    <span class="text-success me-2"> {{ $percentageProduct }}%
+                                                        <i class="mdi mdi-arrow-up"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @else
+                                                    <span class="text-danger me-2"> {{ $percentageProduct }}%
+                                                        <i class="mdi mdi-arrow-down"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @endif
+                                            </p>
                                         </div>
 
                                         <div class="flex-shrink-0 align-self-center">
@@ -110,8 +127,21 @@
                                         <div class="flex-grow-1">
                                             <h1 style="font-size:26px">Rp {{ number_format($income, 2) }}</h1>
                                             <p class="text-muted mb-0 text-truncate"><b>Pendapatan Kotor</b></p>
-                                            <p class="text-muted"><span class="text-success me-2"> 70% <i class="mdi mdi-arrow-up"></i> </span> dari Bulan April</p>
-                                            <!--p class="text-muted fw-medium font-size-12">{{ $percentageIncome }}</p>-->
+                                            <p class="text-muted">
+                                                @if ($percentageIncome === 0)
+                                                    <span class="text-warning me-2"> {{ $percentageIncome }}%
+                                                        <i class="mdi mdi-equal"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @elseif ($percentageIncome > 0)
+                                                    <span class="text-success me-2"> {{ $percentageIncome }}%
+                                                        <i class="mdi mdi-arrow-up"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @else
+                                                    <span class="text-danger me-2"> {{ $percentageIncome }}%
+                                                        <i class="mdi mdi-arrow-down"></i>
+                                                    </span> dari Bulan {{ ucfirst($labelPreviousMonth) }}
+                                                @endif
+                                            </p>
                                         </div>
 
                                         <div class="flex-shrink-0 align-self-center">
@@ -222,9 +252,63 @@
     </div>
 @endsection
 @section('script')
+    <script>
+        $(document).ready(function() {
+            function populateMonths(selectedMonth) {
+                var monthSelect = document.getElementById("currentMonth");
+                var months = [
+                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+
+                months.forEach(function (month, index) {
+                    var option = document.createElement("option");
+                    option.value = index + 1;
+                    option.text = month;
+
+                    if ((selectedMonth !== '') && (Number(selectedMonth) === Number(index + 1))) {
+                        option.selected = true;
+                    }
+
+                    monthSelect.appendChild(option);
+                });
+            }
+
+            function populateYears(startYear, endYear, selectedYear) {
+                var yearSelect = document.getElementById("currentYear");
+
+                for (var year = startYear; year <= endYear; year++) {
+                    var option = document.createElement("option");
+                    option.value = year;
+                    option.text = year;
+
+                    if ((selectedYear !== '') && (Number(selectedYear) === Number(year))) {
+                        option.selected = true;
+                    }
+
+                    yearSelect.appendChild(option);
+                }
+
+            }
+
+            function initFilter() {
+                var selectedMonth = @json($currentMonth);
+                var selectedYear = @json($currentYear);
+                var currentYear = new Date().getFullYear();
+                populateMonths(selectedMonth);
+                populateYears(2000, currentYear, selectedYear);
+                $('.select2').select2();
+            }
+
+            window.onload = initFilter;
+        })
+    </script>
+
     <!-- apexcharts -->
     <script src="{{ URL::asset('/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 
     <!-- dashboard init -->
     <script src="{{ URL::asset('/assets/js/pages/dashboard.init.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 @endsection
