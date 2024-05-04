@@ -74,7 +74,7 @@ class HomeController extends Controller
 
             $percentageOrder = 0;
             if ($currentOrder !== 0) {
-                $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
+                $percentageOrder = number_format((($currentOrder - $previousOrder) / ($currentOrder)) * 100);
             }
 
             $currentProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
@@ -89,7 +89,7 @@ class HomeController extends Controller
 
             $percentageProduct = 0;
             if ($currentProduct !== 0) {
-                $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
+                $percentageProduct = number_format((($currentProduct - $previousProduct) / ($currentProduct)) * 100);
             }
 
             $currentIncome = Invoice::whereMonth('created_at', $currentMonth)
@@ -104,7 +104,7 @@ class HomeController extends Controller
 
             $percentageIncome = 0;
             if ($currentIncome !== 0) {
-                $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
+                $percentageIncome = number_format((($currentIncome - $previousIncome) / ($currentIncome)) * 100);
             }
 
             $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
@@ -182,7 +182,7 @@ class HomeController extends Controller
             ->where('created_by', 'like', '%' . $user . '%')
             ->count();
 
-        $percentageOrder = (($currentOrder - $previousOrder) / ($currentOrder)) * 100;
+        $percentageOrder = ($currentOrder == 0) ? 0 : number_format((($currentOrder - $previousOrder) / ($currentOrder)) * 100);
 
         $currentProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
@@ -194,7 +194,7 @@ class HomeController extends Controller
             ->where('created_by', 'like', '%' . $user . '%')
             ->sum('qty');
 
-        $percentageProduct = (($currentProduct - $previousProduct) / ($currentProduct)) * 100;
+        $percentageProduct = ($currentProduct == 0) ? 0 : number_format((($currentProduct - $previousProduct) / ($currentProduct)) * 100);
 
         $currentIncome = Invoice::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)
@@ -206,7 +206,7 @@ class HomeController extends Controller
             ->where('created_by', 'like', '%' . $user . '%')
             ->sum('total');
 
-        $percentageIncome = (($currentIncome - $previousIncome) / ($currentIncome)) * 100;
+        $percentageIncome = ($currentIncome == 0) ? 0 : number_format((($currentIncome - $previousIncome) / ($currentIncome)) * 100);
 
         $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear)

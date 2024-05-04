@@ -40,12 +40,25 @@
                     <div class="d-flex align-items-center gap-3 flex-wrap justify-content-end">
                         <form id="filter-form" method="POST" action="{{ route('index') }}" class="d-flex flex-wrap gap-3">
                             @csrf
-                            <select id="currentMonth" name="currentMonth" class="form-control select2" style="width: 200px" value="{{ $currentMonth }}">
-                                <option value="" {{ $currentMonth == '' ? 'selected' : '' }}>All Month</option>
+                            <select id="currentMonth" name="currentMonth" class="form-control select2" style="width: 200px">
+                                
+                                <option value="01" {{ $currentMonth == '01' ? 'selected' : '' }}>Januari</option>
+                                <option value="02" {{ $currentMonth == '02' ? 'selected' : '' }}>Februari</option>
+                                <option value="03" {{ $currentMonth == '03' ? 'selected' : '' }}>Maret</option>
+                                <option value="04" {{ $currentMonth == '04' ? 'selected' : '' }}>April</option>
+                                <option value="05" {{ $currentMonth == '05' ? 'selected' : '' }}>Mei</option>
+                                <option value="06" {{ $currentMonth == '06' ? 'selected' : '' }}>Juni</option>
+                                <option value="07" {{ $currentMonth == '07' ? 'selected' : '' }}>Juli</option>
+                                <option value="08" {{ $currentMonth == '08' ? 'selected' : '' }}>Agustus</option>
+                                <option value="09" {{ $currentMonth == '09' ? 'selected' : '' }}>September</option>
+                                <option value="10" {{ $currentMonth == '10' ? 'selected' : '' }}>Oktober</option>
+                                <option value="11" {{ $currentMonth == '11' ? 'selected' : '' }}>November</option>
+                                <option value="12" {{ $currentMonth == '12' ? 'selected' : '' }}>Desember</option>
                             </select>
 
                             <select id="currentYear" name="currentYear" class="form-control select2" style="width: 200px" value="{{ $currentYear }}">
-                                <option value="" {{ $currentYear == '' ? 'selected' : '' }}>All Year</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
                             </select>
 
                             <button type="submit" class="btn btn-primary" id="apply-filter-button">Apply Filter</button>
@@ -171,13 +184,8 @@
                                               <td style="width: 30%;">
                                                 <p class="mb-0">{{ $item['item'] }}</p>
                                               </td>
-                                              <td style="width: 25%;">
-                                                <h5 class="mb-0">{{ $item['total_qty'] }}</h5>
-                                              </td>
-                                              <td>
-                                                <div class="bg-transparent progress-sm progress">
-                                                  <div class="progress-bar bg-success" style="width: 94%;" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
+                                              <td style="width: 25%;" align="right">
+                                                <h5 class="mb-0">{{ $item['total_qty'] }}</h5> Pcs
                                               </td>
                                           </tr>
                                           @endforeach
