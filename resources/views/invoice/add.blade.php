@@ -102,7 +102,8 @@
                                                             <div class="col-12 col-md-3">
                                                                 <button type="button" class="btn btn-success waves-effect btn-label waves-light"
                                                                         style="margin-top: 1.8rem;"
-                                                                        onclick="window.location='{{ route('showFormCustomer') }}'">
+                                                                        data-bs-toggle="modal" data-bs-target=".formAddCustomer">
+                                                                        {{-- onclick="window.location='{{ route('showFormCustomer') }}'"> --}}
                                                                     <i class="bx bx-user-plus label-icon me-1"></i> Customer
                                                                 </button>
                                                             </div>
@@ -185,13 +186,83 @@
             </div>
         </div>
     </div>
-    <!-- end row -->
+
+    <div class="modal fade formAddCustomer" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Form Add Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ route('storeCustomer') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div data-repeater-list="outer-group" class="outer">
+                            <div data-repeater-item class="outer">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="name">Name * :</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="name"
+                                                name="name"
+                                                placeholder="Enter Name..."
+                                            >
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email">Email * :</label>
+                                            <input
+                                                type="email"
+                                                class="form-control"
+                                                id="email"
+                                                name="email"
+                                                placeholder="Enter Email..."
+                                            >
+                                        </div>
+                                        <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                                            <input type="hidden" id="active_hidden" name="active_hidden" value=1>
+                                            <input class="form-check-input" type="checkbox" id="active" name="active" checked>
+                                            <label class="form-check-label" for="active">
+                                                Active
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="no_hp">No. Hp * :</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="no_hp"
+                                                name="no_hp"
+                                                placeholder="Enter No. Hp..."
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" style="margin-top: 27px;">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @section('script')
     <script>
         $(document).ready(function() {
+            $('.modal').find('#active').change(function () {
+                var activeValue = $(this).prop('checked');
+                $('#active_hidden').val(activeValue ? 1 : 0);
+            });
+
             $(document).on('change', 'select[name="brand_id"]', function() {
                 var selectedBrandId = $(this).val();
                 // populateItems(selectedBrandId)

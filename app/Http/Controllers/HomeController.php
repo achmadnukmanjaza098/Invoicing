@@ -106,13 +106,13 @@ class HomeController extends Controller
             if ($currentIncome !== 0) {
                 $percentageIncome = number_format((($currentIncome - $previousIncome) / ($currentIncome)) * 100);
             }
-
-            $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
-                ->whereYear('created_at', $currentYear)
-                ->where('created_by', 'like', '%' . $user . '%')
-                ->groupBy('item')
+            $bestSellerProduct = DetailInvoice::join('categories', 'categories.id', '=', 'detail_invoices.category_id')
+                ->whereMonth('detail_invoices.created_at', $currentMonth)
+                ->whereYear('detail_invoices.created_at', $currentYear)
+                ->where('detail_invoices.created_by', 'like', '%' . $user . '%')
+                ->groupBy('item', 'detail_invoices.category_id')
                 ->orderBy('total_qty', 'desc')
-                ->select('item', DB::raw('sum(qty) as total_qty'))
+                ->select('item', 'categories.name as category', DB::raw('sum(qty) as total_qty'))
                 ->limit(3)
                 ->get();
 
@@ -208,12 +208,13 @@ class HomeController extends Controller
 
         $percentageIncome = ($currentIncome == 0) ? 0 : number_format((($currentIncome - $previousIncome) / ($currentIncome)) * 100);
 
-        $bestSellerProduct = DetailInvoice::whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->where('created_by', 'like', '%' . $user . '%')
-            ->groupBy('item')
+        $bestSellerProduct = DetailInvoice::join('categories', 'categories.id', '=', 'detail_invoices.category_id')
+            ->whereMonth('detail_invoices.created_at', $currentMonth)
+            ->whereYear('detail_invoices.created_at', $currentYear)
+            ->where('detail_invoices.created_by', 'like', '%' . $user . '%')
+            ->groupBy('item', 'detail_invoices.category_id')
             ->orderBy('total_qty', 'desc')
-            ->select('item', DB::raw('sum(qty) as total_qty'))
+            ->select('item', 'categories.name as category', DB::raw('sum(qty) as total_qty'))
             ->limit(3)
             ->get();
 

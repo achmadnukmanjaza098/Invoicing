@@ -25,7 +25,8 @@
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{ route('user') }}" key="t-user">List User</a></li>
                             <li><a href="{{ route('brand') }}" key="t-brand">List Brand</a></li>
-                            <li><a href="{{ route('item') }}" key="t-brand">List Item</a></li>
+                            <li><a href="{{ route('item') }}" key="t-item">List Item</a></li>
+                            <li><a href="{{ route('category') }}" key="t-category">List Category</a></li>
                         </ul>
                     </li>
                 @endif

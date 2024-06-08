@@ -37,12 +37,12 @@
             <div class="dropdown dropdown-mega d-none d-lg-block ml-2">
                 <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
                     <span key="t-megamenu">@lang('translation.Mega_Menu')</span>
-                    <i class="mdi mdi-chevron-down"></i> 
+                    <i class="mdi mdi-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu dropdown-megamenu">
                     <div class="row">
                         <div class="col-sm-8">
-    
+
                             <div class="row">
                                 <div class="col-md-4">
                                     <h5 class="font-size-14 mt-0" key="t-ui-components">@lang('translation.UI_Components')</h5>
@@ -119,7 +119,7 @@
                                         <li>
                                             <a href="javascript:void(0);" key="t-faqs">@lang('translation.FAQs')</a>
                                         </li>
-                            
+
                                     </ul>
                                 </div>
                             </div>
@@ -175,12 +175,12 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                     aria-labelledby="page-header-search-dropdown">
-                    
+
                     <form class="p-3">
                         <div class="form-group m-0">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="@lang('translation.Search')" aria-label="Search input">
-                                
+
                                 <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>s
                             </div>
                         </div>
@@ -209,7 +209,7 @@
                     @endswitch
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
-    
+
                     <!-- item-->
                     <a href="{{ url('index/en') }}" class="dropdown-item notify-item language" data-lang="eng">
                         <img src="{{ URL::asset ('/assets/images/flags/us.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
@@ -218,17 +218,17 @@
                     <a href="{{ url('index/es') }}" class="dropdown-item notify-item language" data-lang="sp">
                         <img src="{{ URL::asset ('/assets/images/flags/spain.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
                     </a>
-    
+
                     <!-- item-->
                     <a href="{{ url('index/de') }}" class="dropdown-item notify-item language" data-lang="gr">
                         <img src="{{ URL::asset ('/assets/images/flags/germany.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
                     </a>
-    
+
                     <!-- item-->
                     <a href="{{ url('index/it') }}" class="dropdown-item notify-item language" data-lang="it">
                         <img src="{{ URL::asset ('/assets/images/flags/italy.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
                     </a>
-    
+
                     <!-- item-->
                     <a href="{{ url('index/ru') }}" class="dropdown-item notify-item language" data-lang="ru">
                         <img src="{{ URL::asset ('/assets/images/flags/russia.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
@@ -375,7 +375,7 @@
                     </div>
                     <div class="p-2 border-top d-grid">
                         <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
-                            <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">@lang('translation.View_More')</span> 
+                            <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">@lang('translation.View_More')</span>
                         </a>
                     </div>
                 </div>
@@ -408,11 +408,11 @@
                     <i class="bx bx-cog bx-spin"></i>
                 </button>
             </div>
-            
+
         </div>
     </div>
 </header>
-    
+
 <div class="topnav">
     <div class="container-fluid">
         <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
@@ -438,7 +438,7 @@
                         <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button"
                             >
                             <i class="bx bx-tone me-2"></i>
-                            <span key="t-ui-elements"> @lang('translation.UI_Elements')</span> 
+                            <span key="t-ui-elements"> @lang('translation.UI_Elements')</span>
                             <div class="arrow-down"></div>
                         </a>
 
@@ -514,7 +514,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="dropdown">
                                 <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-ecommerce"
                                     role="button" >
@@ -547,7 +547,7 @@
                                     <a href="crypto-ico-landing" class="dropdown-item" key="t-ico">@lang('translation.ICO_Landing')</a>
                                 </div>
                             </div>
-                            
+
                             <div class="dropdown">
                                 <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-project"
                                     role="button" >

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -13,6 +14,13 @@ class CustomerController extends Controller
 
         return view('customer.list')
                         ->with('customers', $customers);
+    }
+
+    public function transactionHistory($id)
+    {
+        $transactionHistory = Invoice::where('customer_id', $id)->get();
+
+        return $transactionHistory;
     }
 
     public function showFormCustomer(Request $request)

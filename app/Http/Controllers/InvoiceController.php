@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\DetailInvoice;
+use App\Models\HistoryPayment;
 use App\Models\Invoice;
 use App\Models\Item;
 use Illuminate\Http\Request;
@@ -50,12 +51,16 @@ class InvoiceController extends Controller
                                             ->select('detail_invoices.*', 'categories.name as category_name')
                                             ->get();
 
+            $historyPayments = HistoryPayment::where('invoice_id', '=', $invoice->id)->orderByDesc('created_at')->get();
+
             return view('invoice.edit')
                         ->with('invoice', $invoice)
                         ->with('detail_invoices', $detail_invoices)
                         ->with('items', $items)
                         ->with('customers', $customers)
-                        ->with('brands', $brands);
+                        ->with('historyPayments', $historyPayments)
+                        ->with('brands', $brands)
+                        ->with('categories', $categories);
         } else {
             return view('invoice.add')
                         ->with('items', $items)
@@ -68,7 +73,7 @@ class InvoiceController extends Controller
     public function storeInvoice(Request $request)
     {
         $request->validate([
-            'order_id' => 'required|unique:invoices,order_id',
+            'order_id' => 'required|unique:invoices,order_id|numeric',
             'customer_id' => 'required',
             'date' => 'required',
             'due_date' => 'required',
@@ -86,7 +91,7 @@ class InvoiceController extends Controller
             $invoice = Invoice::create([
                 'order_id' => $request->order_id,
                 'customer_id' => $request->customer_id,
-                'status_invoice' => 'Belum DP',
+                'status_invoice' => 'Draft',
                 'status_payment' => 'Not Yet',
                 'date' => $request->date,
                 'due_date' => $request->due_date,
@@ -107,6 +112,12 @@ class InvoiceController extends Controller
                 ]);
             }
 
+            $historyPayment = HistoryPayment::create([
+                'invoice_id' => $invoice->id,
+                'before' => "",
+                'after' => "Belum DP",
+            ]);
+
         } catch (\exception $e) {
             \Log::debug($e);
             return redirect()->back()->with('failed', 500);
@@ -119,27 +130,89 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($request->id);
 
-        $request->validate([
-            'payment_method' => 'required',
-            'proof_of_payment' => ($request->input('status_invoice') === 'Lunas' && $request->input('payment_method') == 'Transfer') ? 'required' : ''
-        ]);
+        if ($request->submit === 'true' && $invoice->status_invoice != 'Draft') {
+            $request->validate([
+                'payment_method' => 'required',
+                'proof_of_payment' => ($request->input('status_invoice') === 'Lunas' && $request->input('payment_method') == 'Transfer') ? 'required' : ''
+            ]);
+        } else {
+            $request->validate([
+                'order_id' => 'required|numeric',
+                'customer_id' => 'required',
+                'date' => 'required',
+                'due_date' => 'required',
+                'brand_id' => 'required',
+                'detail_items' => 'required',
+                'detail_items.*.item_id' => 'nullable',
+                'detail_items.*.item' => 'required',
+                'detail_items.*.category_id' => 'required',
+                'detail_items.*.qty' => 'required',
+                'detail_items.*.price' => 'required',
+                'detail_items.*.amount' => 'required',
+            ]);
+        }
 
         try {
-            $fileName = null;
+            if ($request->submit === 'true' && $invoice->status_invoice != 'Draft') {
+                $fileNameProofOfPayment = null;
+                $fileNamePhotoOfItem = null;
 
-            if ($request->payment_method == 'Transfer' && $request->file('proof_of_payment')) {
-                $file = $request->file('proof_of_payment');
-                $fileName = $file->getClientOriginalName();
-                $destinationPath = public_path('/assets/uploads/proof_of_payment');
-                $file->move($destinationPath, $fileName);
+                if ($request->payment_method == 'Transfer' && $request->file('proof_of_payment')) {
+                    $file = $request->file('proof_of_payment');
+                    $fileNameProofOfPayment = $file->getClientOriginalName();
+                    $destinationPath = public_path('/assets/uploads/proof_of_payment');
+                    $file->move($destinationPath, $fileNameProofOfPayment);
+                }
+
+                if ($request->file('photo_of_item')) {
+                    $file = $request->file('photo_of_item');
+                    $fileNamePhotoOfItem = $file->getClientOriginalName();
+                    $destinationPath = public_path('/assets/uploads/photo_of_item');
+                    $file->move($destinationPath, $fileNamePhotoOfItem);
+                }
+
+                if ($invoice->status_invoice !== $request->status_invoice) {
+                    $historyPayment = HistoryPayment::create([
+                        'invoice_id' => $invoice->id,
+                        'before' => $invoice->status_invoice,
+                        'after' => $request->status_invoice,
+                    ]);
+                }
+
+                $invoice->update([
+                    'status_invoice' => $request->status_invoice,
+                    'status_payment' => $request->status_invoice === 'Lunas' ? 'Paid' : 'Not Yet',
+                    'payment_method' => $request->payment_method,
+                    'notes' => $request->notes,
+                    'proof_of_payment' => $fileNameProofOfPayment,
+                    'photo_of_item' => $fileNamePhotoOfItem,
+                ]);
+            } else {
+                $invoice->update([
+                    'order_id' => $request->order_id,
+                    'customer_id' => $request->customer_id,
+                    'status_invoice' => $request->submit === 'true' ? 'Belum DP' : 'Draft',
+                    'date' => $request->date,
+                    'due_date' => $request->due_date,
+                    'brand_id' => $request->brand_id,
+                    'tax' => 0,
+                    'subtotal' => str_replace(",", "", $request->total_amount),
+                    'total' => str_replace(",", "", $request->total_amount),
+                ]);
+
+                $deleteDetailInvoice = DetailInvoice::where('invoice_id', '=', $invoice->id)->delete();
+                foreach ($request->detail_items as $value) {
+                    $detail_invoice = DetailInvoice::create([
+                        'invoice_id' => $invoice->id,
+                        'item' => $value['item'],
+                        'category_id' => $value['category_id'],
+                        'qty' => str_replace(",", "", $value['qty']),
+                        'price' => str_replace(",", "", $value['price']),
+                        'total' => str_replace(",", "", $value['amount']),
+                    ]);
+                }
             }
 
-            $invoice->update([
-                'status_invoice' => $request->status_invoice,
-                'status_payment' => $request->status_invoice === 'Lunas' ? 'Paid' : 'Not Yet',
-                'payment_method' => $request->payment_method,
-                'proof_of_payment' => $fileName,
-            ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('failed', 500);
         }
@@ -175,8 +248,11 @@ class InvoiceController extends Controller
                                 ->get();
 
         $imagePath = public_path('/assets/uploads/logo/' . $invoice['logo']);
-        $imageData = base64_encode(file_get_contents($imagePath));
-        $src = 'data:'.mime_content_type($imagePath).';base64,'.$imageData;
+        $src = "";
+        if ($invoice['logo']) {
+            $imageData = base64_encode(file_get_contents($imagePath));
+            $src = 'data:'.mime_content_type($imagePath).';base64,'.$imageData;
+        }
 
         $data = [
             'title' => "Invoice $invoice->order_id",

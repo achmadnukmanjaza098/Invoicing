@@ -6,25 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Invoice extends Model
+class HistoryPayment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
-        'customer_id',
-        'date',
-        'due_date',
-        'subtotal',
-        'tax',
-        'total',
-        'status_payment',
-        'payment_method',
-        'proof_of_payment',
-        'brand_id',
-        'status_invoice',
-        'photo_of_item',
-        'notes',
+        'invoice_id',
+        'before',
+        'after',
+        'created_at',
+        'updated_at',
         'created_by',
         'updated_by',
     ];

@@ -41,7 +41,7 @@
                         <form id="filter-form" method="POST" action="{{ route('index') }}" class="d-flex flex-wrap gap-3">
                             @csrf
                             <select id="currentMonth" name="currentMonth" class="form-control select2" style="width: 200px">
-                                
+
                                 <option value="01" {{ $currentMonth == '01' ? 'selected' : '' }}>Januari</option>
                                 <option value="02" {{ $currentMonth == '02' ? 'selected' : '' }}>Februari</option>
                                 <option value="03" {{ $currentMonth == '03' ? 'selected' : '' }}>Maret</option>
@@ -181,10 +181,13 @@
                                       <tbody>
                                           @foreach ($bestSellerProduct as $key => $item)
                                           <tr>
-                                              <td style="width: 30%;">
+                                              <td style="width: 20%;">
                                                 <p class="mb-0">{{ $item['item'] }}</p>
                                               </td>
-                                              <td style="width: 25%;" align="right">
+                                              <td style="width: 20%;">
+                                                <p class="mb-0">{{ $item['category'] }}</p>
+                                              </td>
+                                              <td style="width: 15%;" align="right">
                                                 <h5 class="mb-0">{{ $item['total_qty'] }}</h5> Pcs
                                               </td>
                                           </tr>

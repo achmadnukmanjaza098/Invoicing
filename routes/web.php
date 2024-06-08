@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
@@ -42,6 +43,13 @@ Route::middleware(['auth'])->group(function() {
     Route::post('updateBrand/{id}', [BrandController::class, 'updateBrand'])->name('updateBrand');
     Route::get('deleteBrand/{id}', [BrandController::class, 'deleteBrand'])->name('deleteBrand');
 
+    // category
+    Route::get('category', [CategoryController::class, 'category'])->name('category');
+    Route::get('showFormCategory/{id?}', [CategoryController::class, 'showFormCategory'])->name('showFormCategory');
+    Route::post('storeCategory', [CategoryController::class, 'storeCategory'])->name('storeCategory');
+    Route::post('updateCategory/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+    Route::get('deleteCategory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+
     // item
     Route::get('item', [ItemController::class, 'item'])->name('item');
     Route::get('showFormItem/{id?}', [ItemController::class, 'showFormItem'])->name('showFormItem');
@@ -51,6 +59,7 @@ Route::middleware(['auth'])->group(function() {
 
     // customer
     Route::get('customer', [CustomerController::class, 'customer'])->name('customer');
+    Route::get('customerTransactionHistory/{id?}', [CustomerController::class, 'transactionHistory'])->name('transactionHistory');
     Route::get('showFormCustomer/{id?}', [CustomerController::class, 'showFormCustomer'])->name('showFormCustomer');
     Route::post('storeCustomer', [CustomerController::class, 'storeCustomer'])->name('storeCustomer');
     Route::post('updateCustomer/{id}', [CustomerController::class, 'updateCustomer'])->name('updateCustomer');

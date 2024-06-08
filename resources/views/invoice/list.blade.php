@@ -34,12 +34,11 @@
                     <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
                         <thead>
                             <tr>
-                                <th>Order Id</th>
-                                <th>Payment</th>
-                                <th>Brand</th>
-                                <th>Customer</th>
-                                <th>Invoice Date</th>
+                                <th>No. Invoice</th>
+                                <th>Name</th>
                                 <th>Total</th>
+                                <th>Payment</th>
+                                <th>Deadline</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -48,36 +47,39 @@
                         <tbody>
                             @foreach ($invoices as $invoice)
                                 <tr>
-                                    <td>{{ $invoice['order_id'] }}</td>
+                                    <td><span style="cursor: pointer" onclick="download({{$invoice->id}})">{{ $invoice['order_id'] }}</span></td>
+                                    <td>{{ $invoice['customer'] }}</td>
+                                    <td>Rp {{ number_format($invoice['total'], 2) }}</td>
                                     <td>
-                                        @if ($invoice['status_payment'] == 'Paid')
-                                                <span class="badge badge-pill badge-soft-success font-size-12">
-                                                    @if ($invoice['payment_method'] == 'Cash')
-                                                        <i class="bx bx-money"></i>
-                                                    @else
-                                                        <i class="bx bx-transfer-alt"></i>
-                                                    @endif
-                                                    {{ $invoice['payment_method'] }} - {{ $invoice['status_payment'] }}
-                                                </span>
-                                            @else
-                                                @if ($invoice['payment_method'])
-                                                    <span class="badge badge-pill badge-soft-danger font-size-12">
+                                        @if ($invoice['status_invoice'] == 'Draft')
+                                            <span class="badge badge-pill badge-soft-warning font-size-12">{{ $invoice['status_invoice'] }}</span>
+                                        @else
+                                            @if ($invoice['status_payment'] == 'Paid')
+                                                    <span class="badge badge-pill badge-soft-success font-size-12">
                                                         @if ($invoice['payment_method'] == 'Cash')
                                                             <i class="bx bx-money"></i>
                                                         @else
                                                             <i class="bx bx-transfer-alt"></i>
                                                         @endif
-                                                        {{ $invoice['payment_method'] }} - {{ $invoice['status_invoice'] }}
+                                                        {{ $invoice['payment_method'] }} - {{ $invoice['status_payment'] }}
                                                     </span>
                                                 @else
-                                                    <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }}</span>
-                                                @endif
+                                                    @if ($invoice['payment_method'])
+                                                        <span class="badge badge-pill badge-soft-danger font-size-12">
+                                                            @if ($invoice['payment_method'] == 'Cash')
+                                                                <i class="bx bx-money"></i>
+                                                            @else
+                                                                <i class="bx bx-transfer-alt"></i>
+                                                            @endif
+                                                            {{ $invoice['payment_method'] }} - {{ $invoice['status_invoice'] }}
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-pill badge-soft-danger font-size-12">{{ $invoice['status_payment'] }}</span>
+                                                    @endif
+                                            @endif
                                         @endif
                                     </td>
-                                    <td>{{ $invoice['brand'] }}</td>
-                                    <td>{{ $invoice['customer'] }}</td>
                                     <td>{{ \Carbon\Carbon::parse($invoice['date'])->format('d - m - Y') }}</td>
-                                    <td>Rp {{ number_format($invoice['total'], 2) }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-3">
                                             <i
