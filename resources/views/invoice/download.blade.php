@@ -167,7 +167,7 @@
         <tbody>
             @foreach ($detail_invoices as $item)
                 <tr>
-                    <td>{{ $item['item_name'] }} - Size {{ $item['item_size'] }}</td>
+                    <td>{{ $item['item'] }}</td>
                     <td class="item_qty">{{ $item['qty'] }}</td>
                     <td class="item_price">IDR {{ number_format($item['price'], 2) }}</td>
                     <td class="item_total">IDR {{ number_format($item['total'], 2) }}</td>

@@ -242,10 +242,7 @@ class InvoiceController extends Controller
                                         'brands.no_rekening as brand_rekenings', 'customers.name as customer_name')
                                 ->first();
 
-        $detail_invoices = DetailInvoice::join('items', 'items.id', '=', 'detail_invoices.item_id')
-                                ->where('invoice_id', '=', $request->id)
-                                ->select('detail_invoices.*', 'items.name as item_name', 'items.size as item_size')
-                                ->get();
+        $detail_invoices = DetailInvoice::where('invoice_id', '=', $request->id)->get();
 
         $imagePath = public_path('/assets/uploads/logo/' . $invoice['logo']);
         $src = "";
